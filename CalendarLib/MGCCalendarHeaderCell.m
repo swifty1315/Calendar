@@ -10,12 +10,14 @@
 @interface MGCCalendarHeaderCell ()
 
 @property (nonatomic, assign, getter=isToday) BOOL today;
+@property (nonatomic, assign, getter=isPastDay) BOOL pastDay;
 @property (nonatomic, assign, getter=isWeekend) BOOL weekend;
 
 //colors
 @property (nonatomic, strong) UIColor *selectedDayBackgroundColor;
 @property (nonatomic, strong) UIColor *selectedDayTextColor;
 @property (nonatomic, strong) UIColor *todayColor;
+@property (nonatomic, strong) UIColor *pastDateColor;
 @property (nonatomic, strong) UIColor *weekendColor;
 
 
@@ -27,10 +29,12 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {        
-        self.selectedDayBackgroundColor = [UIColor darkGrayColor];
-        self.selectedDayTextColor = [UIColor whiteColor];
-        self.todayColor = [UIColor redColor];
-        self.weekendColor = [UIColor grayColor];
+        //self.selectedDayBackgroundColor = [UIColor whiteColor];
+        self.selectedDayTextColor = [UIColor darkGrayColor];
+        
+        self.pastDateColor = [UIColor colorWithRed:0.11 green:0.14 blue:0.22 alpha:0.38];
+        self.todayColor = [UIColor colorWithRed:0.25 green:0.47 blue:0.97 alpha:1.0];
+        self.weekendColor = [UIColor colorWithRed:0.98 green:0.32 blue:0.5 alpha:1.0];
     }
     return self;
 }
@@ -50,6 +54,7 @@
     
     //the cell is the current day
     self.today = [[NSCalendar currentCalendar] isDate:[NSDate date] inSameDayAsDate:date];
+    self.pastDay = [self.date timeIntervalSinceNow] < 0.0;
     
     //tthe cell is a weekend day
     self.weekend = [[NSCalendar currentCalendar] isDateInWeekend:date];
@@ -69,23 +74,30 @@
     [super layoutSubviews];
     
     if (self.isSelected) {
-        self.dayNumberLabel.backgroundColor = self.selectedDayBackgroundColor;
+        self.highlightView.backgroundColor = [UIColor colorWithRed:0.25 green:0.47 blue:0.97 alpha:0.16];
         self.dayNumberLabel.layer.masksToBounds = YES;
         self.dayNumberLabel.layer.cornerRadius = 15.0;
         self.dayNumberLabel.textColor = self.selectedDayTextColor;
     }
     else {
+        self.highlightView.backgroundColor = [UIColor whiteColor];
         self.dayNumberLabel.backgroundColor = [UIColor clearColor];
-        self.dayNumberLabel.textColor = self.selectedDayBackgroundColor;
+        //self.dayNumberLabel.textColor = self.selectedDayBackgroundColor;
+    }
+    
+    if (self.isWeekend && !self.isToday) {
+        self.dayNumberLabel.textColor = self.weekendColor;
+        self.dayNameLabel.textColor = self.weekendColor;
+    }
+    
+    if (self.isPastDay) {
+        self.dayNumberLabel.textColor = self.pastDateColor;
+        self.dayNameLabel.textColor = self.pastDateColor;
     }
     
     if (self.isToday) {
         self.dayNumberLabel.textColor = self.todayColor;
         self.dayNameLabel.textColor = self.todayColor;
-    }
-    if (self.isWeekend && !self.isToday) {
-        self.dayNumberLabel.textColor = self.weekendColor;
-        self.dayNameLabel.textColor = self.weekendColor;
     }
 }
 
@@ -93,14 +105,17 @@
 {
     [super prepareForReuse];
 
+    self.backgroundColor = [UIColor whiteColor];
     self.dayNameLabel.textColor = [UIColor blackColor];
     self.dayNumberLabel.textColor = [UIColor blackColor];
     self.today = NO;
     self.weekend = NO;
-    self.selectedDayBackgroundColor = [UIColor darkGrayColor];
-    self.selectedDayTextColor = [UIColor whiteColor];
-    self.todayColor = [UIColor redColor];
-    self.weekendColor = [UIColor grayColor];
+    
+    self.selectedDayBackgroundColor = [UIColor colorWithRed:0.25 green:0.47 blue:0.97 alpha:0.16];
+    self.selectedDayTextColor = [UIColor darkGrayColor];
+    self.pastDateColor = [UIColor colorWithRed:0.75 green:0.78 blue:0.82 alpha:1.0];
+    self.todayColor = [UIColor colorWithRed:0.25 green:0.47 blue:0.97 alpha:1.0];
+    self.weekendColor = [UIColor colorWithRed:0.98 green:0.32 blue:0.5 alpha:1.0];
 }
 
 @end

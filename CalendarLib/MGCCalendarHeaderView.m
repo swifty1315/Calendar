@@ -34,14 +34,13 @@ typedef NS_ENUM(NSInteger, HeaderSection){
 @property (nonatomic, strong) UILabel *detailsLabel;
 @property (nonatomic, strong) NSDateFormatter *detailsDateFormater;
 
-
 @end
 
 @implementation MGCCalendarHeaderView
 
 static NSString *kCellIdentifier = @"CalendarHeaderCellId";
 static NSInteger kNumberOfDaysToDisplay = 7; //one week
-static CGFloat kDetailsLabelHeight = 20;
+static CGFloat kDetailsLabelHeight = 0;
 static CGFloat kItemHeight = 60;
 
 #pragma mark - Initialization
@@ -66,7 +65,7 @@ static CGFloat kItemHeight = 60;
         //setup a calendar to do the dates calculations
         self.calendar = [NSCalendar currentCalendar];
         [self.calendar setLocale:[NSLocale currentLocale]]; //use the current locale to fit the user region
-        self.selectedDate = [self.calendar startOfDayForDate:[NSDate date]];
+        self.selectedDate = [NSDate date];
         self.selectedDateIndex = [self.calendar component:NSCalendarUnitWeekday fromDate:self.selectedDate] -1; //-1 as 1 is the first day of the week, but we are dealing with arrays starting on 0
         
         //setup the collection view
@@ -115,7 +114,6 @@ static CGFloat kItemHeight = 60;
     //recalculate the label size to addapt to rotations
     
     self.detailsLabel.frame = CGRectMake(self.previousContentOffset.x, self.frame.size.height - kDetailsLabelHeight , self.frame.size.width, kDetailsLabelHeight);
-    
 }
 
 - (void)didMoveToSuperview{

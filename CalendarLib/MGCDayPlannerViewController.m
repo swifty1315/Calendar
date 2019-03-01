@@ -72,7 +72,8 @@
     
     if (!self.headerView && self.showsWeekHeaderView) {
         self.dayPlannerView.numberOfVisibleDays = 1;
-        self.dayPlannerView.dayHeaderHeight = 90;
+        self.dayPlannerView.dayHeaderHeight = self.view.frame.size.width / 7;
+        
         self.dayPlannerView.visibleDays.start = [NSDate date];
         [self setupHeaderView];
     }
@@ -82,7 +83,6 @@
     self.headerView = [[MGCCalendarHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.dayPlannerView.frame.size.width, self.dayPlannerView.dayHeaderHeight) collectionViewLayout:[[UICollectionViewFlowLayout alloc] init] andDayPlannerView:self.dayPlannerView];
     
     self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
     [self.view addSubview:self.headerView];
 }
 
@@ -104,7 +104,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 /*
 #pragma mark - Navigation

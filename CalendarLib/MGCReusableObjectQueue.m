@@ -29,7 +29,7 @@
 //
 
 #import "MGCReusableObjectQueue.h"
-
+#import <UIKit/UIKit.h>
 
 @interface MGCReusableObjectQueue ()
 

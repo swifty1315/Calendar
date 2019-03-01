@@ -1933,6 +1933,8 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         
         return view;
     }
+    
+    return nil;
 }
 
 #pragma mark - MGCTimedEventsViewLayoutDelegate

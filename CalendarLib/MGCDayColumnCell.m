@@ -69,7 +69,7 @@ static const CGFloat dotSize = 4;
 		[self.contentView.layer addSublayer:_dotLayer];
 		
 		_leftBorder = [CALayer layer];
-		[self.contentView.layer addSublayer:_leftBorder];
+		//[self.contentView.layer addSublayer:_leftBorder];
 	}
     return self;
 }

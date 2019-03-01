@@ -12,5 +12,6 @@
 @property (nonatomic, strong) IBOutlet UILabel *dayNumberLabel;
 @property (nonatomic, strong) IBOutlet UILabel *dayNameLabel;
 @property (nonatomic, strong) NSDate *date;
+@property (weak, nonatomic) IBOutlet UIView *highlightView;
 
 @end

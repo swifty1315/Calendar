@@ -28,6 +28,8 @@
 //  SOFTWARE.
 //
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 // functions to align coordinates on pixel boundaries
 
