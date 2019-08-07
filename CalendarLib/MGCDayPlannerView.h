@@ -124,9 +124,16 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
 @property (nonatomic) CGFloat dayHeaderHeight;
 
 /*!
+ 
+ @abstract Value which indicates whether shirt will be drawen on dimmed times
+ @discussion Defauls is no
+ */
+@property (nonatomic) BOOL shouldDrawShirt;
+/*!
 	@abstract	Returns the color of the vertical separator lines between days.
 	@discussion The default value is light gray.
  */
+
 @property (nonatomic) UIColor *daySeparatorsColor;
 
 /*!

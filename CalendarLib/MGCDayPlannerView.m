@@ -42,7 +42,7 @@
 #import "MGCTimeRowsView.h"
 #import "MGCAlignedGeometry.h"
 #import "OSCache.h"
-
+#import "MGCDimmedCollectionReusableView.h"
 
 // used to restrict scrolling to one direction / axis
 typedef enum: NSUInteger
@@ -862,7 +862,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 		_timedEventsView.directionalLockEnabled = YES;
 		
 		[_timedEventsView registerClass:MGCEventCell.class forCellWithReuseIdentifier:EventCellReuseIdentifier];
-        [_timedEventsView registerClass:UICollectionReusableView.class forSupplementaryViewOfKind:DimmingViewKind withReuseIdentifier:DimmingViewReuseIdentifier];
+        [_timedEventsView registerClass:MGCDimmedCollectionReusableView.class forSupplementaryViewOfKind:DimmingViewKind withReuseIdentifier:DimmingViewReuseIdentifier];
 		UILongPressGestureRecognizer *longPress = [UILongPressGestureRecognizer new];
 		[longPress addTarget:self action:@selector(handleLongPress:)];
 		[_timedEventsView addGestureRecognizer:longPress];
@@ -1910,8 +1910,13 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 - (UICollectionReusableView*)collectionView:(UICollectionView*)collectionView viewForSupplementaryElementOfKind:(NSString*)kind atIndexPath:(NSIndexPath*)indexPath
 {
     if ([kind isEqualToString:DimmingViewKind]) {
-        UICollectionReusableView *view = [self.timedEventsView dequeueReusableSupplementaryViewOfKind:DimmingViewKind withReuseIdentifier:DimmingViewReuseIdentifier forIndexPath:indexPath];
-        view.backgroundColor = self.dimmingColor;
+       //
+        MGCDimmedCollectionReusableView *view = [self.timedEventsView dequeueReusableSupplementaryViewOfKind:DimmingViewKind withReuseIdentifier:DimmingViewReuseIdentifier forIndexPath:indexPath];
+        view.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+        view.strokeColor = self.dimmingColor;
+        view.itemHeight = self.hourSlotHeight;
+        view.shouldDrawShirt = self.shouldDrawShirt;
+        [view setNeedsDisplay];
         
         return view;
     }
