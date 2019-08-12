@@ -80,6 +80,11 @@
 	return self.hourSlotHeight > 100;
 }
 
+- (BOOL)showsFifteenHourLines
+{
+    return self.hourSlotHeight > 100;
+}
+
 - (void)setHourRange:(NSRange)hourRange
 {
     NSAssert(hourRange.length >= 1 && NSMaxRange(hourRange) <= 24, @"Invalid hour range %@", NSStringFromRange(hourRange));
@@ -110,7 +115,7 @@
 // time is the interval since the start of the day
 - (NSString*)stringForTime:(NSTimeInterval)time rounded:(BOOL)rounded minutesOnly:(BOOL)minutesOnly
 {
-	if (rounded) {
+	if (rounded && !minutesOnly) {
 		time = roundf(time / (self.rounding * 60)) * (self.rounding * 60);
 	}
 	
@@ -213,10 +218,50 @@
 		if (self.showsHalfHourLines && i < NSMaxRange(self.hourRange)) {
 			y = MGCAlignedFloat(y + self.hourSlotHeight/2.) - lineWidth * .5;
 			CGContextSetLineDash(context, 0, dash, 2);
-			CGContextMoveToPoint(context, self.timeColumnWidth, y),
+            CGContextMoveToPoint(context, self.timeColumnWidth, y);
 			CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
 			CGContextStrokePath(context);
+            
+            markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkFloating time:(i % 24)*3600 + 30*60];
+            markSize = [markAttrStr boundingRectWithSize:markSizeMax options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
+            
+            CGRect r = MGCAlignedRectMake(kSpacing, y - markSize.height / 2., markSizeMax.width, markSize.height);
+            if (!CGRectIntersectsRect(r, rectCurTime) || !self.showsCurrentTime) {
+                [markAttrStr drawInRect:r];
+            }
 		}
+        
+        
+        if (self.showsFifteenHourLines && i < NSMaxRange(self.hourRange)) {
+            // 15 minutes
+            
+            y = MGCAlignedFloat(y - self.hourSlotHeight/4.) - lineWidth * .5;
+            CGContextSetLineDash(context, 0, dash, 2);
+            CGContextMoveToPoint(context, self.timeColumnWidth, y);
+            CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
+            CGContextStrokePath(context);
+            
+            markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkFloating time:(i % 24)*3600 + 15*60];
+            markSize = [markAttrStr boundingRectWithSize:markSizeMax options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
+            CGRect r = MGCAlignedRectMake(kSpacing, y - markSize.height / 2., markSizeMax.width, markSize.height);
+            if (!CGRectIntersectsRect(r, rectCurTime) || !self.showsCurrentTime) {
+                [markAttrStr drawInRect:r];
+            }
+            
+             // 45 minutes
+            y = MGCAlignedFloat(y + (self.hourSlotHeight/4.) * 2) - lineWidth * .5;
+            CGContextSetLineDash(context, 0, dash, 2);
+            CGContextMoveToPoint(context, self.timeColumnWidth, y);
+            CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
+            CGContextStrokePath(context);
+            
+            markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkFloating time:(i % 24)*3600 + 45*60];
+            markSize = [markAttrStr boundingRectWithSize:markSizeMax options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
+            r = MGCAlignedRectMake(kSpacing, y - markSize.height / 2., markSizeMax.width, markSize.height);
+            if (!CGRectIntersectsRect(r, rectCurTime) || !self.showsCurrentTime) {
+                [markAttrStr drawInRect:r];
+            }
+        }
 		
 		// don't draw time mark if it intersects any other mark
 		drawTimeMark &= !CGRectIntersectsRect(r, rectTimeMark);

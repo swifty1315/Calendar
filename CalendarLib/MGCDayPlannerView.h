@@ -125,6 +125,14 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
 
 /*!
  
+ @abstract Value which allow to show minutes when user drags event
+ @discussion Defauls is YES
+ */
+@property (nonatomic) BOOL shouldShowMinutesOnDragging;
+/*!
+ 
+/*!
+ 
  @abstract Value which indicates whether shirt will be drawen on dimmed times
  @discussion Defauls is no
  */

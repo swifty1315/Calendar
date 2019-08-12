@@ -192,6 +192,9 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 	_canCreateEvents = YES;
 	_canMoveEvents = YES;
 	_allowsSelection = YES;
+    _shouldDrawShirt = NO;
+    _shouldShowMinutesOnDragging = YES;
+    
     _eventCoveringType = TimedEventCoveringTypeClassic;
 	
 	_reuseQueue = [[MGCReusableObjectQueue alloc] init];
@@ -1379,7 +1382,9 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 		origin.y = [self convertPoint:ptEventsView fromView:self.timedEventsView].y;
 		origin.y = fmaxf(origin.y, self.timedEventsView.frame.origin.y);
 		
-        self.timeRowsView.timeMark = [self timeFromOffset:ptEventsView.y rounding:0];;
+        if (self.shouldShowMinutesOnDragging) {
+            self.timeRowsView.timeMark = [self timeFromOffset:ptEventsView.y rounding:0];
+        }
 	}
 	else {
 		size.height = self.allDayEventCellHeight;
