@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) UIColor *strokeColor;
 @property (assign, nonatomic) CGFloat itemHeight;
+@property (assign, nonatomic) CGFloat patternWidth;
+@property (assign, nonatomic) CGFloat patternOffset;
 // allow to draw lines on background
 @property (assign, nonatomic) BOOL shouldDrawShirt;
 

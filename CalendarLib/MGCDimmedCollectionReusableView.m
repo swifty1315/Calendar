@@ -13,33 +13,28 @@
     
     if (self.shouldDrawShirt) {
         UIColor *color1 = self.strokeColor;
-        CGFloat patternWidth = 1;
-        CGFloat offset = 12;
+        CGFloat lineWidth = self.patternWidth;
+        CGFloat offset = self.patternOffset;
         
-        self.itemHeight = 65;
         
-        int numberOfLinesInBlock = self.frame.size.height * 2 / (patternWidth + offset) ;
-        int numberOfIterations = numberOfLinesInBlock;
+        int numberOfLines = self.frame.size.height * 2 / (lineWidth + offset) ;
         int leftBottomX = 0; // left bottom
-        int leftBottomY = self.itemHeight; // left bottom and height of block
+        int leftBottomY = self.frame.size.height; // left bottom and height of block
         
-        CGFloat height = self.frame.size.height + 100; // + 100 is castil
-        int numberOfBlocksInColumn = height / self.itemHeight;
+        int rightTopY = 0;
+        int rightTopX = self.frame.size.width;
         
-        for (int j = 0; j < numberOfBlocksInColumn; ++j) {
-            // left y
-            int currentStartY = leftBottomY * j > 0 ? leftBottomY * j : leftBottomY;
+        for (int j = 1; j <= numberOfLines; ++j) {
+        
+            UIBezierPath *linePath = [UIBezierPath bezierPath];
+            [linePath setLineWidth:lineWidth];
+            int step = j * (lineWidth + offset);
             
-            for (int i = 0; i < numberOfIterations; ++i){
-                UIBezierPath *linePath = [UIBezierPath bezierPath];
-                [linePath setLineWidth:patternWidth];
-                int step = i * (patternWidth + offset) > 0 ?  i * (patternWidth + offset) :  patternWidth + offset;
-                
-                [linePath moveToPoint:CGPointMake(0, currentStartY - step)];
-                [linePath addLineToPoint:CGPointMake(leftBottomX + step, currentStartY)];
-                [color1 setStroke];
-                [linePath stroke];
-            }
+            [linePath moveToPoint:CGPointMake(MAX(step - self.frame.size.height, leftBottomX), MAX(leftBottomY - step, rightTopY))];
+            [linePath addLineToPoint:CGPointMake(MIN(leftBottomX + step, rightTopX), MIN(leftBottomY, self.frame.size.width + self.frame.size.height - step))];
+            [color1 setStroke];
+            [linePath stroke];
+            
         }
     }
 }

@@ -280,7 +280,6 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     self.timedEventsViewLayout.dayColumnSize = self.dayColumnSize;
     [self.timedEventsViewLayout invalidateLayout];
-    
     self.timeRowsView.hourSlotHeight = _hourSlotHeight;
     self.timeScrollView.contentSize = CGSizeMake(self.bounds.size.width, self.dayColumnSize.height);
     self.timeRowsView.frame = CGRectMake(0, 0, self.timeScrollView.contentSize.width, self.timeScrollView.contentSize.height);
@@ -290,6 +289,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 
     self.timeScrollView.contentOffset = CGPointMake(0, yOffset);
     self.timedEventsView.contentOffset = CGPointMake(self.timedEventsView.contentOffset.x, yOffset);
+    [self.timedEventsView reloadData];
 }
 
 // public
@@ -1021,6 +1021,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 
                 if ([self.delegate respondsToSelector:@selector(dayPlannerViewDidZoom:)]) {
 					[self.delegate dayPlannerViewDidZoom:self];
+                    //huy
 				}
 			}
 		}
@@ -1916,6 +1917,8 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         view.strokeColor = self.dimmingColor;
         view.itemHeight = self.hourSlotHeight;
         view.shouldDrawShirt = self.shouldDrawShirt;
+        view.patternOffset = self.patternOffset;
+        view.patternWidth = self.patternWidth;
         [view setNeedsDisplay];
         
         return view;
