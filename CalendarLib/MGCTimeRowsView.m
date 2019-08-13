@@ -52,7 +52,8 @@
 		_hourSlotHeight = 65;
 		_insetsHeight = 45;
 		_timeColumnWidth = 40;
-		_font = [UIFont boldSystemFontOfSize:12];
+		_hourFont = [UIFont boldSystemFontOfSize:10];
+        _halfHourFont = [UIFont systemFontOfSize:10];
 		_timeColor = [UIColor lightGrayColor];
 		_currentTimeColor = [UIColor redColor];
 		_rounding = 15;
@@ -75,14 +76,20 @@
 	[self setNeedsDisplay];
 }
 
+
+
 - (BOOL)showsHalfHourLines
 {
-	return self.hourSlotHeight > 100;
+    NSString *myString = @"12:30";
+    CGRect myStringSize = [myString boundingRectWithSize:CGSizeMake(9999, 50) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: self.halfHourFont} context:nil];
+	return self.hourSlotHeight > (((myStringSize.size.height / 3) + 2) * 12);
 }
 
 - (BOOL)showsFifteenHourLines
 {
-    return self.hourSlotHeight > 100;
+    NSString *myString = @"12:30";
+    CGRect myStringSize = [myString boundingRectWithSize:CGSizeMake(9999, 50) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: self.halfHourFont} context:nil];
+    return self.hourSlotHeight > (((myStringSize.size.height / 3) + 4) * 12);
 }
 
 - (void)setHourRange:(NSRange)hourRange
@@ -146,7 +153,9 @@
         style.alignment = NSTextAlignmentRight;
         
         UIColor *foregroundColor = (mark == MGCDayPlannerTimeMarkCurrent ? self.currentTimeColor : self.timeColor);
-        attrStr = [[NSAttributedString alloc]initWithString:str attributes:@{ NSFontAttributeName: self.font, NSForegroundColorAttributeName: foregroundColor, NSParagraphStyleAttributeName: style }];
+        UIFont *font = (mark == MGCDayPlannerTimeMarkHalf) ? self.halfHourFont : self.hourFont;
+        
+        attrStr = [[NSAttributedString alloc]initWithString:str attributes:@{ NSFontAttributeName: font, NSForegroundColorAttributeName: foregroundColor, NSParagraphStyleAttributeName: style }];
     }
     return attrStr;
 }
@@ -222,7 +231,7 @@
 			CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
 			CGContextStrokePath(context);
             
-            markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkFloating time:(i % 24)*3600 + 30*60];
+            markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkHalf time:(i % 24)*3600 + 30*60];
             markSize = [markAttrStr boundingRectWithSize:markSizeMax options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
             
             CGRect r = MGCAlignedRectMake(kSpacing, y - markSize.height / 2., markSizeMax.width, markSize.height);
@@ -241,7 +250,7 @@
             CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
             CGContextStrokePath(context);
             
-            markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkFloating time:(i % 24)*3600 + 15*60];
+            markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkHalf time:(i % 24)*3600 + 15*60];
             markSize = [markAttrStr boundingRectWithSize:markSizeMax options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
             CGRect r = MGCAlignedRectMake(kSpacing, y - markSize.height / 2., markSizeMax.width, markSize.height);
             if (!CGRectIntersectsRect(r, rectCurTime) || !self.showsCurrentTime) {
@@ -255,7 +264,7 @@
             CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
             CGContextStrokePath(context);
             
-            markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkFloating time:(i % 24)*3600 + 45*60];
+            markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkHalf time:(i % 24)*3600 + 45*60];
             markSize = [markAttrStr boundingRectWithSize:markSizeMax options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
             r = MGCAlignedRectMake(kSpacing, y - markSize.height / 2., markSizeMax.width, markSize.height);
             if (!CGRectIntersectsRect(r, rectCurTime) || !self.showsCurrentTime) {

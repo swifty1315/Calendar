@@ -54,6 +54,7 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerTimeMark) {
     MGCDayPlannerTimeMarkHeader = 0,
     MGCDayPlannerTimeMarkCurrent = 1,
     MGCDayPlannerTimeMarkFloating = 2,
+    MGCDayPlannerTimeMarkHalf = 3,
 };
 
 
