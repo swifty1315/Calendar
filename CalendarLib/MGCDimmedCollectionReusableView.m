@@ -17,7 +17,7 @@
         CGFloat offset = self.patternOffset;
         
         
-        int numberOfLines = self.frame.size.height * 2 / (lineWidth + offset) ;
+        int numberOfLines = self.frame.size.height + self.frame.size.width / (lineWidth + offset) ;
         int leftBottomX = 0; // left bottom
         int leftBottomY = self.frame.size.height; // left bottom and height of block
         

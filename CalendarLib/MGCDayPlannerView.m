@@ -1024,7 +1024,6 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 
                 if ([self.delegate respondsToSelector:@selector(dayPlannerViewDidZoom:)]) {
 					[self.delegate dayPlannerViewDidZoom:self];
-                    //huy
 				}
 			}
 		}
