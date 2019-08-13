@@ -37,6 +37,12 @@
 
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) NSUInteger rounding;
+@property (nonatomic) NSString *templateTime;
+@property (nonatomic) CGRect hourStringRect;
+@property (nonatomic) CGRect minuteStringRect;
+
+
+
 
 @end
 
@@ -59,6 +65,11 @@
 		_rounding = 15;
 		_hourRange = NSMakeRange(0, 24);
 		
+        _templateTime = @"12:30";
+        
+        _hourStringRect = [_templateTime boundingRectWithSize:CGSizeMake(9999, 50) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: _hourFont} context:nil];
+        _minuteStringRect = [_templateTime boundingRectWithSize:CGSizeMake(9999, 50) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: _halfHourFont} context:nil];
+        
 		self.showsCurrentTime = YES;
 	}
 	return self;
@@ -76,20 +87,14 @@
 	[self setNeedsDisplay];
 }
 
-
-
 - (BOOL)showsHalfHourLines
 {
-    NSString *myString = @"12:30";
-    CGRect myStringSize = [myString boundingRectWithSize:CGSizeMake(9999, 50) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: self.halfHourFont} context:nil];
-	return self.hourSlotHeight > (((myStringSize.size.height / 3) + 2) * 12);
+	return self.hourSlotHeight > (((self.minuteStringRect.size.height / 3) + 2) * 12);
 }
 
 - (BOOL)showsFifteenHourLines
 {
-    NSString *myString = @"12:30";
-    CGRect myStringSize = [myString boundingRectWithSize:CGSizeMake(9999, 50) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: self.halfHourFont} context:nil];
-    return self.hourSlotHeight > (((myStringSize.size.height / 3) + 4) * 12);
+    return self.hourSlotHeight > (((self.minuteStringRect.size.height / 3) + 4) * 12);
 }
 
 - (void)setHourRange:(NSRange)hourRange
