@@ -365,9 +365,11 @@ static NSString* const EventCellReuseIdentifier = @"EventCellReuseIdentifier";
     MGCStandardEventView *evCell = (MGCStandardEventView*)[view dequeueReusableViewWithIdentifier:EventCellReuseIdentifier forEventOfType:type atIndex:index date:date];
     evCell.font = [UIFont systemFontOfSize:11];
     evCell.title = ev.title;
-    evCell.subtitle = ev.location;
+    // castil
+    evCell.subtitle = @"123123 123 123 12 3123 123 123 891273 173 17389 172389 712983 123 123";//ev.location;
+    evCell.detail = @"666 76 767 7676767676 767676 7 76767676 7667766 7 67 76 76 67 677676 666";
     evCell.color = [UIColor colorWithCGColor:ev.calendar.CGColor];
-    evCell.style = MGCStandardEventViewStylePlain|MGCStandardEventViewStyleSubtitle;
+    evCell.style = MGCStandardEventViewStylePlain|MGCStandardEventViewStyleSubtitle|MGCStandardEventViewStyleDetail;
     evCell.style |= (type == MGCAllDayEventType) ?: MGCStandardEventViewStyleBorder;
     return evCell;
 }

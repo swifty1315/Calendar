@@ -51,7 +51,7 @@ static CGFloat kSpace = 2;
 		
 		_color = [UIColor blackColor];
 		_style = MGCStandardEventViewStylePlain|MGCStandardEventViewStyleSubtitle;
-		_font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
+		_font = [UIFont boldSystemFontOfSize:14];
 		_leftBorderView = [[UIView alloc]initWithFrame:CGRectZero];
 		[self addSubview:_leftBorderView];
 	}
@@ -70,29 +70,34 @@ static CGFloat kSpace = 2;
 	if (self.title) {
 		[s appendString:self.title];
 	}
+    
+    self.font = [UIFont boldSystemFontOfSize:14];
+	NSMutableAttributedString *as = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName: self.font }];
 	
-	UIFont *boldFont = [UIFont fontWithDescriptor:[[self.font fontDescriptor] fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold] size:self.font.pointSize];
-	NSMutableAttributedString *as = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName: boldFont ?: self.font }];
-	
-	if (self.subtitle && self.subtitle.length > 0 && self.style & MGCStandardEventViewStyleSubtitle) {
+    //castil
+    self.subtitle = @"Стрижка";
+	if ([self shouldDrawSubtitleInRect:rect] && self.subtitle && self.subtitle.length > 0 && self.style & MGCStandardEventViewStyleSubtitle) {
 		NSMutableString *s  = [NSMutableString stringWithFormat:@"\n%@", self.subtitle];
 		NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName:self.font}];
 		[as appendAttributedString:subtitle];
 	}
+    
+    // castil
+    self.detail = @"13:00 - 14:00";
 	
-	if (self.detail && self.detail.length > 0 && self.style & MGCStandardEventViewStyleDetail) {
-		UIFont *smallFont = [UIFont fontWithDescriptor:[self.font fontDescriptor] size:self.font.pointSize - 2];
-		NSMutableString *s = [NSMutableString stringWithFormat:@"\t%@", self.detail];
+    if ([self shouldDrawDetailsInRect:rect] && self.detail && self.detail.length > 0 && self.style & MGCStandardEventViewStyleDetail) {
+		UIFont *smallFont = [UIFont systemFontOfSize:12];
+		NSMutableString *s = [NSMutableString stringWithFormat:@"\n%@", self.detail];
 		NSMutableAttributedString *detail = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName:smallFont}];
 		[as appendAttributedString:detail];
 	}
 	
-	NSTextTab *t = [[NSTextTab alloc]initWithTextAlignment:NSTextAlignmentRight location:rect.size.width options:[[NSDictionary alloc] init]];
-	NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
-	style.tabStops = @[t];
+	//NSTextTab *t = [[NSTextTab alloc]initWithTextAlignment:NSTextAlignmentRight location:rect.size.width options:[[NSDictionary alloc] init]];
+	//NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+	//style.tabStops = @[t];
 	//style.hyphenationFactor = .4;
 	//style.lineBreakMode = NSLineBreakByTruncatingMiddle;
-	[as addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, as.length)];
+	//[as addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, as.length)];
 	
 	UIColor *color = self.selected ? [UIColor whiteColor] : self.color;
 	[as addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(0, as.length)];
@@ -100,6 +105,25 @@ static CGFloat kSpace = 2;
 	self.attrString = as;
 }
 
+- (BOOL)shouldDrawSubtitleInRect:(CGRect)rect {
+    
+    CGRect titleBoundingRect = [self.title boundingRectWithSize:CGSizeMake(rect.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:nil context:nil];
+    
+    CGRect subtitleBoundingRect = [self.subtitle boundingRectWithSize:CGSizeMake(rect.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:nil context:nil];
+    
+    return titleBoundingRect.size.height + subtitleBoundingRect.size.height < rect.size.height;
+}
+
+- (BOOL)shouldDrawDetailsInRect:(CGRect)rect {
+    
+    CGRect titleBoundingRect = [self.title boundingRectWithSize:CGSizeMake(rect.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:nil context:nil];
+    
+    CGRect subtitleBoundingRect = [self.subtitle boundingRectWithSize:CGSizeMake(rect.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:nil context:nil];
+    
+    CGRect detailBoundingRect = [self.detail boundingRectWithSize:CGSizeMake(rect.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:nil context:nil];
+    
+    return titleBoundingRect.size.height + subtitleBoundingRect.size.height + detailBoundingRect.size.height < rect.size.height;
+}
 
 - (void)layoutSubviews
 {
@@ -166,9 +190,9 @@ static CGFloat kSpace = 2;
 	CGRect boundingRect = [self.attrString boundingRectWithSize:CGSizeMake(drawRect.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
 	drawRect.size.height = fminf(drawRect.size.height, self.visibleHeight);
 	
-	if (boundingRect.size.height > drawRect.size.height) {
-		[self.attrString.mutableString replaceOccurrencesOfString:@"\n" withString:@"  " options:NSCaseInsensitiveSearch range:NSMakeRange(0, self.attrString.length)];
-	}
+//    if (boundingRect.size.height > drawRect.size.height) {
+//        [self.attrString.mutableString replaceOccurrencesOfString:@"\n" withString:@"  " options:NSCaseInsensitiveSearch range:NSMakeRange(0, self.attrString.length)];
+//    }
 
 	[self.attrString drawWithRect:drawRect options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin context:nil];
 }
