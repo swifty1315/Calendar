@@ -14,4 +14,13 @@
 @property (nonatomic, strong) NSDate *date;
 @property (weak, nonatomic) IBOutlet UIView *highlightView;
 
+//colors
+@property (nonatomic, strong) UIColor *dayBackgroundColor;
+@property (nonatomic, strong) UIColor *selectedDayBackgroundColor;
+@property (nonatomic, strong) UIColor *selectedDayTextColor;
+@property (nonatomic, strong) UIColor *dayTextColor;
+@property (nonatomic, strong) UIColor *todayColor;
+@property (nonatomic, strong) UIColor *pastDateColor;
+@property (nonatomic, strong) UIColor *weekendColor;
+
 @end

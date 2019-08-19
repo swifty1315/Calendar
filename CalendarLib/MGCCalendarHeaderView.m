@@ -51,7 +51,7 @@ static CGFloat kItemHeight = 60;
     if (self) {
         
         self.dayPlannerView = dayPlannerView;
-        self.headerBackgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];;
+        self.headerBackgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
         
         //setup the flow layout
         self.flowLayout = (UICollectionViewFlowLayout*)layout;
@@ -163,6 +163,11 @@ static CGFloat kItemHeight = 60;
 
 #pragma mark - Public methods
 
+- (void)refreshAppearance{
+    self.backgroundColor = self.headerBackgroundColor;
+    [self reloadData];
+}
+
 - (void)selectDate:(NSDate *)date{
     
     if(![self.calendar isDate:date inSameDayAsDate:self.selectedDate]){
@@ -203,6 +208,13 @@ static CGFloat kItemHeight = 60;
             break;
     }
     
+    cell.pastDateColor = self.dateTextColor;
+    cell.dayTextColor = self.dayTextColor;
+    cell.selectedDayTextColor = self.selectedDayTextColor;
+    cell.selectedDayBackgroundColor = self.selectedDayBackgroundColor;
+    cell.weekendColor = self.weekendColor;
+    cell.todayColor = self.accentColor;
+    cell.dayBackgroundColor = self.headerBackgroundColor;
     return cell;
 }
 

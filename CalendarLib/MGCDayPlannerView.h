@@ -76,6 +76,7 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
  */
 @interface MGCDayPlannerView : UIView
 
+- (void)reload;
 /*! 
 	@group Configuring a day planner view
 */
@@ -131,8 +132,7 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
  */
 @property (nonatomic) BOOL shouldShowMinutesOnDragging;
 /*!
- 
-/*!
+
  
  @abstract Value which indicates whether shirt will be drawen on dimmed times
  @discussion Defauls is no

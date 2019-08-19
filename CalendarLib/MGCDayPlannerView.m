@@ -28,6 +28,7 @@
 //  SOFTWARE.
 //
 
+#import "MGCCalendarHeaderView.h"
 #import "MGCDayPlannerView.h"
 #import "NSCalendar+MGCAdditions.h"
 #import "MGCDateRange.h"
@@ -1738,6 +1739,11 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 	[self updateVisibleDaysRange];
 }
 
+- (void)reload{
+    [self.timedEventsView reloadData];
+    [self.allDayEventsView reloadData];
+    [self.dayColumnsView reloadData];
+}
 #pragma mark - MGCTimeRowsViewDelegate
 
 - (NSAttributedString*)timeRowsView:(MGCTimeRowsView *)view attributedStringForTimeMark:(MGCDayPlannerTimeMark)mark time:(NSTimeInterval)ti
@@ -1917,7 +1923,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     if ([kind isEqualToString:DimmingViewKind]) {
        //
         MGCDimmedCollectionReusableView *view = [self.timedEventsView dequeueReusableSupplementaryViewOfKind:DimmingViewKind withReuseIdentifier:DimmingViewReuseIdentifier forIndexPath:indexPath];
-        view.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+        view.backgroundColor = [UIColor clearColor];
         view.strokeColor = self.dimmingColor;
         view.itemHeight = self.hourSlotHeight;
         view.shouldDrawShirt = self.shouldDrawShirt;

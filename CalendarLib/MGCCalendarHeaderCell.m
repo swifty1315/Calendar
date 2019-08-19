@@ -13,13 +13,6 @@
 @property (nonatomic, assign, getter=isPastDay) BOOL pastDay;
 @property (nonatomic, assign, getter=isWeekend) BOOL weekend;
 
-//colors
-@property (nonatomic, strong) UIColor *selectedDayBackgroundColor;
-@property (nonatomic, strong) UIColor *selectedDayTextColor;
-@property (nonatomic, strong) UIColor *todayColor;
-@property (nonatomic, strong) UIColor *pastDateColor;
-@property (nonatomic, strong) UIColor *weekendColor;
-
 
 @end
 
@@ -31,7 +24,7 @@
     if (self) {        
         //self.selectedDayBackgroundColor = [UIColor whiteColor];
         self.selectedDayTextColor = [UIColor darkGrayColor];
-        
+        self.dayTextColor = [UIColor blackColor];
         self.pastDateColor = [UIColor colorWithRed:0.11 green:0.14 blue:0.22 alpha:0.38];
         self.todayColor = [UIColor colorWithRed:0.25 green:0.47 blue:0.97 alpha:1.0];
         self.weekendColor = [UIColor colorWithRed:0.98 green:0.32 blue:0.5 alpha:1.0];
@@ -74,16 +67,18 @@
     [super layoutSubviews];
     
     if (self.isSelected) {
-        self.highlightView.backgroundColor = [UIColor colorWithRed:0.25 green:0.47 blue:0.97 alpha:0.16];
+        self.highlightView.backgroundColor = self.selectedDayBackgroundColor;
         self.dayNumberLabel.layer.masksToBounds = YES;
         self.dayNumberLabel.layer.cornerRadius = 15.0;
         self.dayNumberLabel.textColor = self.selectedDayTextColor;
-    }
-    else {
-        self.highlightView.backgroundColor = [UIColor whiteColor];
+    } else {
+        self.highlightView.backgroundColor = self.dayBackgroundColor;
         self.dayNumberLabel.backgroundColor = [UIColor clearColor];
-        //self.dayNumberLabel.textColor = self.selectedDayBackgroundColor;
+        self.dayNumberLabel.backgroundColor = [UIColor clearColor];
     }
+    
+    self.dayNumberLabel.textColor = self.dayTextColor;
+    self.dayNameLabel.textColor = self.dayTextColor;
     
     if (self.isWeekend && !self.isToday) {
         self.dayNumberLabel.textColor = self.weekendColor;
