@@ -371,10 +371,14 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     CGFloat dayWidth = self.dayColumnSize.width;
 	
 	NSUInteger first = floorf(self.timedEventsView.contentOffset.x / dayWidth);
-	NSDate *firstDay = [self dateFromDayOffset:first];
-	if (self.dateRange && [firstDay compare:self.dateRange.start] == NSOrderedAscending)
-		firstDay = self.dateRange.start;
-
+    
+    // will be selected date
+	NSDate *firstDay = [self dateFromDayOffset:first]; // startDate + offset (first)
+    
+    if (self.dateRange && [firstDay compare:self.dateRange.start] == NSOrderedAscending) {
+        firstDay = self.dateRange.start;
+    }
+		
 	// since the day column width is rounded, there can be a difference of a few points between
 	// the right side of the view bounds and the limit of the last column, causing last visible day
 	// to be one more than expected. We have to take this in account
@@ -1688,7 +1692,6 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 	self.timeRowsView.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
 	
     self.timeScrollView.userInteractionEnabled = NO;
-    
     
     self.dayColumnsView.frame = CGRectMake(self.timeColumnWidth, 0, timedEventsViewWidth, self.bounds.size.height);
     if (!self.dayColumnsView.superview) {

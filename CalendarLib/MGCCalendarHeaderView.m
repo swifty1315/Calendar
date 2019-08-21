@@ -66,8 +66,10 @@ static CGFloat kItemHeight = 60;
         self.calendar = [NSCalendar currentCalendar];
         [self.calendar setLocale:[NSLocale currentLocale]]; //use the current locale to fit the user region
         self.selectedDate = [NSDate date];
-        self.selectedDateIndex = [self.calendar component:NSCalendarUnitWeekday fromDate:self.selectedDate] -1; //-1 as 1 is the first day of the week, but we are dealing with arrays starting on 0
         
+        self.selectedDateIndex = [self.calendar component:NSCalendarUnitWeekday fromDate:self.selectedDate];
+        // convert week day number to array index
+        self.selectedDateIndex = [self getArrayIndexByWeekDayNumber:self.selectedDateIndex];
         //setup the collection view
         self.pagingEnabled = YES;
         self.delegate = self;
@@ -100,6 +102,18 @@ static CGFloat kItemHeight = 60;
     return self;
 }
 
+- (NSInteger)getArrayIndexByWeekDayNumber:(NSInteger)weekDayNumber{
+    
+    // monday week day is equal to 2 etc...
+    if (weekDayNumber >= 2) {
+        // because monday week day is 2 and we dealling with an array from monday to sunday
+        weekDayNumber = weekDayNumber - 2;
+        return weekDayNumber;
+    }
+    // sunday week day is equal 1 and should be in the end of array
+    return 6;
+}
+
 #pragma mark - UIView lifecycle
 
 - (void)layoutSubviews{
@@ -109,6 +123,7 @@ static CGFloat kItemHeight = 60;
     self.flowLayout.itemSize = CGSizeMake(maxItemWidth, kItemHeight);
     
     //always select the same day of the week when switching weeks (as the native apple calendar does)
+
     [self selectItemAtIndexPath:[NSIndexPath indexPathForRow:self.selectedDateIndex inSection:CurrentWeekSection] animated:YES scrollPosition:UICollectionViewScrollPositionNone];
     
     //recalculate the label size to addapt to rotations
@@ -131,14 +146,21 @@ static CGFloat kItemHeight = 60;
 {
     NSDateComponents* components = [self.calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekOfYear | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:date];
     
-    NSMutableArray* weekDaysDates = [NSMutableArray array];
+    NSMutableArray<NSDate*>* weekDaysDates = [NSMutableArray array];
     
     //iterate to fill the dates of the week days
     for (int i = 1; i <= 7; i++) { //1 is the comopnent for the first day of week 7 the last
         [components setWeekday:i];
+
         NSDate* date = [self.calendar dateFromComponents:components];
         [weekDaysDates addObject:date];
     }
+    
+    [weekDaysDates sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        NSDate* dt1 = obj1;
+        NSDate* dt2 = obj2;
+        return [dt1 compare:dt2];
+    }];
     
     return weekDaysDates;
 }
@@ -173,11 +195,11 @@ static CGFloat kItemHeight = 60;
     if(![self.calendar isDate:date inSameDayAsDate:self.selectedDate]){
         
         self.selectedDate = [self.calendar startOfDayForDate:date];
-        self.selectedDateIndex = [self.calendar component:NSCalendarUnitWeekday fromDate:self.selectedDate] -1;
+        self.selectedDateIndex = [self.calendar component:NSCalendarUnitWeekday fromDate:self.selectedDate];
+        self.selectedDateIndex = [self getArrayIndexByWeekDayNumber:self.selectedDateIndex];
         
         //setup the new weeks dates
         [self setupWeekDates];
-        
         [self reloadData];
         
         //keep the day view synchronized
