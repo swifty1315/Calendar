@@ -1790,6 +1790,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
             [views addObject:cell.eventView];
         }
     }
+    
     else if (type == MGCAllDayEventType) {
         NSArray *visibleCells = [self.allDayEventsView visibleCells];
         for (MGCEventCell *cell in visibleCells) {
@@ -2333,8 +2334,6 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     if (scrollview != self.controllingScrollView)
         return;
     
-    //NSLog(@"scrollViewDidScroll");
-    
     [self lockScrollingDirection];
     
     if (self.scrollDirection & ScrollDirectionHorizontal) {
@@ -2406,9 +2405,27 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView
 {
-    //NSLog(@"scrollViewDidEndDecelerating");
     
     [self scrollViewDidEndScrolling:scrollView];
+    
+    if (self.weekPagingEnabled == YES) {
+        NSDate *startDate = self.visibleDays.start;
+        NSDateComponents *dc = [NSDateComponents new];
+        [dc setDay:3]; // because 1 + 3 = middle of the visible days
+        NSDate *middleDate = [self.calendar dateByAddingComponents:dc toDate:startDate options:0];
+        
+        self.calendar.firstWeekday = 2;
+        // 1: Sunday, 2: Monday, ..., 7:Saturday
+        NSDate *startOfTheWeek;
+        NSTimeInterval interval;
+        [self.calendar rangeOfUnit:NSCalendarUnitWeekOfYear
+                         startDate:&startOfTheWeek
+                          interval:&interval
+                           forDate:middleDate];
+        
+        [self scrollToDate:startOfTheWeek options:MGCDayPlannerScrollDate animated:YES];
+    }
+    
     
     [[UIDevice currentDevice]beginGeneratingDeviceOrientationNotifications];
 }

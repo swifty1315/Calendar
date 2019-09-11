@@ -98,6 +98,13 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
 @property (nonatomic) NSUInteger numberOfVisibleDays;
 
 /*!
+ @abstract    Set scrolling by week for week view.
+ @discussion It is used for scrolling week view by week not by days. Default = NO
+ */
+
+@property (nonatomic) BOOL weekPagingEnabled;
+
+/*!
 	@abstract	Returns the size of a column (readonly).
 	@discussion The width is calculated by dividing the view width by the number of visible days.
 				The height does not include the header height nor the height of the full-day events bar.
