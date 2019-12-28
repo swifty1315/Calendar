@@ -66,7 +66,7 @@ static CGFloat kItemHeight = 60;
         self.calendar = [NSCalendar currentCalendar];
         [self.calendar setLocale:[NSLocale currentLocale]]; //use the current locale to fit the user region
         self.selectedDate = [NSDate date];
-        
+         [self.calendar setTimeZone:[NSTimeZone localTimeZone]];
         self.selectedDateIndex = [self.calendar component:NSCalendarUnitWeekday fromDate:self.selectedDate];
         // convert week day number to array index
         self.selectedDateIndex = [self getArrayIndexByWeekDayNumber:self.selectedDateIndex];
@@ -147,13 +147,22 @@ static CGFloat kItemHeight = 60;
     NSDateComponents* components = [self.calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekOfYear | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:date];
     
     NSMutableArray<NSDate*>* weekDaysDates = [NSMutableArray array];
-    
+    [components setYear:components.year];
     //iterate to fill the dates of the week days
-    for (int i = 1; i <= 7; i++) { //1 is the comopnent for the first day of week 7 the last
-        [components setWeekday:i];
-
-        NSDate* date = [self.calendar dateFromComponents:components];
-        [weekDaysDates addObject:date];
+    
+    NSDate *startOfWeek;
+    NSTimeInterval length;
+    [self.calendar rangeOfUnit: NSCalendarUnitWeekOfYear
+                                    startDate:&startOfWeek
+                                     interval:&length
+                                      forDate:date];
+    
+    NSDate *endOfWeek = [startOfWeek dateByAddingTimeInterval:length-1];
+    
+    [weekDaysDates addObject:startOfWeek];
+    
+    for (int i = 1; i < 7; i++) { //1 is the comopnent for the first day of week 7 the last
+        [weekDaysDates addObject:[startOfWeek dateByAddingTimeInterval:86400*i]];
     }
     
     [weekDaysDates sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
