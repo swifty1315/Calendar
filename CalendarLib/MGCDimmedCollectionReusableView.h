@@ -7,10 +7,18 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum: NSUInteger {
+    MCDimmedTypeTop,
+    MCDimmedTypeMiddle,
+    MCDimmedTypeBottom,
+    MCDimmedTypeNone = 100
+} MCDimmedCollectionViewType;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MGCDimmedCollectionReusableView : UICollectionReusableView
 
+@property (assign, nonatomic) MCDimmedCollectionViewType viewType;
 @property (strong, nonatomic) UIColor *strokeColor;
 @property (assign, nonatomic) CGFloat itemHeight;
 @property (assign, nonatomic) CGFloat patternWidth;

@@ -74,16 +74,11 @@ static CGFloat kSpace = 2;
     self.font = [UIFont boldSystemFontOfSize:14];
 	NSMutableAttributedString *as = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName: self.font }];
 	
-    //castil
-    self.subtitle = @"Стрижка";
 	if ([self shouldDrawSubtitleInRect:rect] && self.subtitle && self.subtitle.length > 0 && self.style & MGCStandardEventViewStyleSubtitle) {
 		NSMutableString *s  = [NSMutableString stringWithFormat:@"\n%@", self.subtitle];
 		NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName:self.font}];
 		[as appendAttributedString:subtitle];
 	}
-    
-    // castil
-    self.detail = @"13:00 - 14:00";
 	
     if ([self shouldDrawDetailsInRect:rect] && self.detail && self.detail.length > 0 && self.style & MGCStandardEventViewStyleDetail) {
 		UIFont *smallFont = [UIFont systemFontOfSize:12];

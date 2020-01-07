@@ -744,17 +744,17 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     };
     
     if (options == MGCDayPlannerScrollTime) {
-        self.userInteractionEnabled = NO;
+        //self.userInteractionEnabled = NO;
         offset.y = y;
         [self setTimedEventsViewContentOffset:offset animated:animated completion:completion];
     }
     else if (options == MGCDayPlannerScrollDate) {
-        self.userInteractionEnabled = NO;
+        //self.userInteractionEnabled = NO;
         offset.x = x;
         [self setTimedEventsViewContentOffset:offset animated:animated completion:completion];
     }
     else if (options == MGCDayPlannerScrollDateTime) {
-        self.userInteractionEnabled = NO;
+        //self.userInteractionEnabled = NO;
         offset.x = x;
         [self setTimedEventsViewContentOffset:offset animated:animated completion:^(void){
             CGPoint offset = CGPointMake(weakSelf.timedEventsView.contentOffset.x, y);
@@ -1171,7 +1171,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     {
         [self endInteraction]; // in case previous interaction did not end properly
         
-        [self setUserInteractionEnabled:NO];
+        //[self setUserInteractionEnabled:NO];
         
         // where did the gesture start ?
         UICollectionView *view = (UICollectionView*)gesture.view;
@@ -1744,8 +1744,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 
 - (void)reload{
     [self.timedEventsView reloadData];
-    [self.allDayEventsView reloadData];
-    [self.dayColumnsView reloadData];
+    [self.timedEventsView.collectionViewLayout invalidateLayout];
 }
 #pragma mark - MGCTimeRowsViewDelegate
 
@@ -1925,7 +1924,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 - (UICollectionReusableView*)collectionView:(UICollectionView*)collectionView viewForSupplementaryElementOfKind:(NSString*)kind atIndexPath:(NSIndexPath*)indexPath
 {
     if ([kind isEqualToString:DimmingViewKind]) {
-        //
+        
         MGCDimmedCollectionReusableView *view = [self.timedEventsView dequeueReusableSupplementaryViewOfKind:DimmingViewKind withReuseIdentifier:DimmingViewReuseIdentifier forIndexPath:indexPath];
         view.backgroundColor = [UIColor clearColor];
         view.strokeColor = self.dimmingColor;
@@ -1933,6 +1932,30 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         view.shouldDrawShirt = self.shouldDrawShirt;
         view.patternOffset = self.patternOffset;
         view.patternWidth = self.patternWidth;
+        MCDimmedCollectionViewType type = MCDimmedTypeNone;
+        
+        if ([self.timedEventsView.collectionViewLayout isKindOfClass:[MGCTimedEventsViewLayout class]] == NO) {
+            NSAssert(NO, @"Error! Expected MGCTimedEventsViewLayout type");
+            [view setNeedsDisplay];
+            return view;
+        }
+        MGCTimedEventsViewLayout *layout = (MGCTimedEventsViewLayout*)self.timedEventsView.collectionViewLayout;
+        
+        NSInteger dimmedRangesCount = [self collectionView:self.timedEventsView layout:layout dimmingRectsForSection:indexPath.section].count;
+        
+        if (dimmedRangesCount >=3) {
+            if (indexPath.row == 0) {
+                type = MCDimmedTypeTop;
+            } else if (indexPath.row == 1) {
+                type = MCDimmedTypeMiddle;
+            } else if (indexPath.row == 2){
+                type = MCDimmedTypeBottom;
+            } else {
+                NSAssert(NO, @"Error! undefined dimmed type");
+            }
+        }
+        
+        view.viewType = type;
         [view setNeedsDisplay];
         
         return view;
