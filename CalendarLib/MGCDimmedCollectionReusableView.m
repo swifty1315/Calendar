@@ -19,10 +19,12 @@
         CGContextSetLineWidth(context, self.patternWidth);
 
         if (self.viewType == MCDimmedTypeTop) { // top offset
+            CGContextSetLineWidth(context, 2);
             CGContextMoveToPoint(context, 0, self.frame.size.height);
             CGContextAddLineToPoint(context, self.frame.size.width, self.frame.size.height);
             CGContextStrokePath(context);
         } else if (self.viewType == MCDimmedTypeBottom) { // bottom offset
+            CGContextSetLineWidth(context, 2);
             CGContextMoveToPoint(context, 0, 0);
             CGContextAddLineToPoint(context, self.frame.size.width, 0);
             CGContextStrokePath(context);

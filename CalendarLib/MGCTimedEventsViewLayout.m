@@ -105,9 +105,17 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         CGRect rect = [dimmingRects[item] CGRectValue];
         if (!CGRectIsNull(rect)) {
             UICollectionViewLayoutAttributes *viewAttribs = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:DimmingViewKind withIndexPath:indexPath];
-            rect.origin.x = self.dayColumnSize.width * indexPath.section;
-            rect.size.width = self.dayColumnSize.width;
             
+            int diff = 0;
+            int offset = 0;
+            
+            if (self.shouldUseOffset == YES) {
+                diff = self.numberOfDays > 1 ? 0 : self.timeColumnWidth;
+                offset = self.timeColumnWidth;
+            }
+            
+            rect.origin.x = self.dayColumnSize.width * indexPath.section + offset;
+            rect.size.width = self.dayColumnSize.width - diff;
             viewAttribs.frame = MGCAlignedRect(rect);
         
             [layoutAttribs addObject:viewAttribs];
@@ -129,8 +137,16 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         if (!CGRectIsNull(rect)) {
             MGCEventCellLayoutAttributes *cellAttribs = [MGCEventCellLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
             
-            rect.origin.x = self.dayColumnSize.width * indexPath.section;
-            rect.size.width = self.dayColumnSize.width;
+            int diff = 0;
+            int offset = 0;
+            
+            if (self.shouldUseOffset == YES) {
+                diff = self.numberOfDays > 1 ? 0 : self.timeColumnWidth;
+                offset = self.timeColumnWidth;
+            }
+            
+            rect.origin.x = self.dayColumnSize.width * indexPath.section + offset;
+            rect.size.width = self.dayColumnSize.width - diff;
             rect.size.height = fmax(self.minimumVisibleHeight, rect.size.height);
             
             cellAttribs.frame = MGCAlignedRect(CGRectInset(rect , 0, 1));
@@ -235,10 +251,18 @@ static NSString* const EventCellsKey = @"EventCellsKey";
                 groupOffset += offset;
             }
             
-            CGFloat totalWidth = (self.dayColumnSize.width - 1.) - groupOffset;
+            int diff = 0;
+            int offset = 0;
+            
+            if (self.shouldUseOffset == YES) {
+                diff = self.numberOfDays > 1 ? 0 : self.timeColumnWidth;
+                offset = self.timeColumnWidth;
+            }
+            
+            CGFloat totalWidth = (self.dayColumnSize.width - 1.) - groupOffset - diff;
             CGFloat colWidth = totalWidth / layoutGroup.count;
             
-            CGFloat x = section * self.dayColumnSize.width + groupOffset;
+            CGFloat x = section * self.dayColumnSize.width + groupOffset + offset;
             
             for (MGCEventCellLayoutAttributes* attribs in [layoutGroup reverseObjectEnumerator]) {
                 attribs.frame = MGCAlignedRectMake(x, attribs.frame.origin.y, colWidth, attribs.frame.size.height);

@@ -216,8 +216,13 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
 /*!
 	@abstract	Color of dimmed time ranges.
  */
-@property (nonatomic) UIColor *dimmingColor;
+@property (nonatomic) UIColor *accentColor;
 
+
+/*!
+    @abstract If true then time grid is scrollable. Default is false
+ */
+@property (nonatomic) Boolean scrollableTimeGrid;
 
 /*!
  @abstract    Pattern line width of dimmed range.
