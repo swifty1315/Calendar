@@ -31,7 +31,7 @@
 #import "MGCStandardEventView.h"
 
 static CGFloat kSpace = 2;
-
+static CGFloat kBigSpace = 18;
 
 @interface MGCStandardEventView ()
 
@@ -53,6 +53,8 @@ static CGFloat kSpace = 2;
         _textColor = [UIColor blackColor];
 		_style = MGCStandardEventViewStylePlain|MGCStandardEventViewStyleSubtitle;
 		_font = [UIFont boldSystemFontOfSize:14];
+        _subtitleFont = [UIFont boldSystemFontOfSize:13];
+        _detailsFont = [UIFont systemFontOfSize:12];
 		_leftBorderView = [[UIView alloc]initWithFrame:CGRectZero];
 		[self addSubview:_leftBorderView];
 	}
@@ -69,6 +71,7 @@ static CGFloat kSpace = 2;
 	}
 	
 	if (self.title) {
+        [s appendString:@"\n"];
 		[s appendString:self.title];
 	}
     
@@ -77,14 +80,14 @@ static CGFloat kSpace = 2;
 	
 	if ([self shouldDrawSubtitleInRect:rect] && self.subtitle && self.subtitle.length > 0 && self.style & MGCStandardEventViewStyleSubtitle) {
 		NSMutableString *s  = [NSMutableString stringWithFormat:@"\n%@", self.subtitle];
-		NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName:self.font}];
+		NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName:self.subtitleFont}];
 		[as appendAttributedString:subtitle];
 	}
 	
     if ([self shouldDrawDetailsInRect:rect] && self.detail && self.detail.length > 0 && self.style & MGCStandardEventViewStyleDetail) {
-		UIFont *smallFont = [UIFont systemFontOfSize:12];
+		
 		NSMutableString *s = [NSMutableString stringWithFormat:@"\n%@", self.detail];
-		NSMutableAttributedString *detail = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName:smallFont}];
+		NSMutableAttributedString *detail = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName:self.detailsFont}];
 		[as appendAttributedString:detail];
 	}
 	
@@ -125,7 +128,17 @@ static CGFloat kSpace = 2;
 {
 	[super layoutSubviews];
 	self.leftBorderView.frame = CGRectMake(0, 0, 3, self.bounds.size.height);
-    
+    self.leftBorderView.hidden = NO;
+    self.leftBorderView.clipsToBounds = NO;
+    self.clipsToBounds = NO;
+    self.layer.cornerRadius = 3.0;
+    self.leftBorderView.layer.cornerRadius = 3.0;
+    if (@available(iOS 11.0, *)) {
+        self.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMinXMaxYCorner;
+        self.leftBorderView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMinXMaxYCorner;
+    } else {
+        // none here
+    }
 	[self setNeedsDisplay];
 }
 
@@ -176,30 +189,34 @@ static CGFloat kSpace = 2;
 
 - (void)drawRect:(CGRect)rect
 {
-	CGRect drawRect = CGRectInset(rect, kSpace, 0);
+    CGRect drawRect = CGRectInset(rect, self.style & MGCStandardEventViewStyleBigLeftOffset ? kBigSpace : kSpace, 0);
 	if (self.style & MGCStandardEventViewStyleBorder) {
 		drawRect.origin.x += kSpace;
 		drawRect.size.width -= kSpace;
-	}
+    } else if (self.style & MGCStandardEventViewStyleBigLeftOffset) {
+        drawRect.origin.x += kBigSpace;
+        drawRect.size.width -= kBigSpace;
+    }
 	
 	[self redrawStringInRect:drawRect];
 	
 	CGRect boundingRect = [self.attrString boundingRectWithSize:CGSizeMake(drawRect.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
 	drawRect.size.height = fminf(drawRect.size.height, self.visibleHeight);
-	
-//    if (boundingRect.size.height > drawRect.size.height) {
-//        [self.attrString.mutableString replaceOccurrencesOfString:@"\n" withString:@"  " options:NSCaseInsensitiveSearch range:NSMakeRange(0, self.attrString.length)];
-//    }
-
 	[self.attrString drawWithRect:drawRect options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin context:nil];
     
-//    UIBezierPath *path = [UIBezierPath bezierPath];
-//    [path moveToPoint:CGPointMake(0.0, 0.0)];
-//    [path addLineToPoint:CGPointMake(0.0, rect.origin.y)];
-//    [path setLineWidth:3.0];
-//    [self.color setStroke];
-//    [path stroke];
-    
+    if (self.style & MGCStandardEventViewStyleLeftShadow) {
+        UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.leftBorderView.bounds cornerRadius:0];
+        
+        CALayer *layer0 = [[CALayer alloc] init];
+        layer0.shadowPath = shadowPath0.CGPath;
+        layer0.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor;
+        layer0.shadowOpacity = 1;
+        layer0.shadowRadius = 2;
+        layer0.shadowOffset = CGSizeMake(-2, 0);
+        layer0.bounds = self.leftBorderView.bounds;
+        layer0.position = self.leftBorderView.center;
+        [self.leftBorderView.layer addSublayer:layer0];
+    }
 }
 
 #pragma mark - NSCopying protocol

@@ -38,7 +38,9 @@ typedef NS_OPTIONS(NSUInteger, MGCStandardEventViewStyle) {
 	MGCStandardEventViewStyleDot	 = 1 << 1,	// event details are preceded by a dot (e.g to indicate a timed event in the month planner view)
 	MGCStandardEventViewStyleBorder	 = 1 << 2,	// view shows a left border (e.g timed events in the day planner view)
 	MGCStandardEventViewStyleSubtitle = 1 << 3, // view shows the subtitle string
-	MGCStandardEventViewStyleDetail  = 1 << 4	// view shows the detail string
+	MGCStandardEventViewStyleDetail  = 1 << 4,	// view shows the detail string
+    MGCStandardEventViewStyleLeftShadow  = 1 << 5,    // view shows the detail string
+    MGCStandardEventViewStyleBigLeftOffset  = 1 << 6    // view shows the detail string
 };
 
 
@@ -67,7 +69,13 @@ typedef NS_OPTIONS(NSUInteger, MGCStandardEventViewStyle) {
 /*! Style of the view. */
 @property (nonatomic) MGCStandardEventViewStyle style;
 
-/*! Font used to draw the event content. Defaults to system font. */
+/*! Font used to draw the event title. Defaults to system font. */
 @property (nonatomic) UIFont *font;
+
+/*! Font used to draw the event subTitle. Defaults to system font. */
+@property (nonatomic) UIFont *subtitleFont;
+
+/*! Font used to draw the event detail. Defaults to system font. */
+@property (nonatomic) UIFont *detailsFont;
 
 @end
