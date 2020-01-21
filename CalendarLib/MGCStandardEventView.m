@@ -50,6 +50,7 @@ static CGFloat kSpace = 2;
 		self.contentMode = UIViewContentModeRedraw;
 		
 		_color = [UIColor blackColor];
+        _textColor = [UIColor blackColor];
 		_style = MGCStandardEventViewStylePlain|MGCStandardEventViewStyleSubtitle;
 		_font = [UIFont boldSystemFontOfSize:14];
 		_leftBorderView = [[UIView alloc]initWithFrame:CGRectZero];
@@ -94,8 +95,8 @@ static CGFloat kSpace = 2;
 	//style.lineBreakMode = NSLineBreakByTruncatingMiddle;
 	//[as addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, as.length)];
 	
-	UIColor *color = self.selected ? [UIColor whiteColor] : self.color;
-	[as addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(0, as.length)];
+	//UIColor *color = self.selected ? [UIColor whiteColor] : self.textColor;
+	[as addAttribute:NSForegroundColorAttributeName value:self.textColor range:NSMakeRange(0, as.length)];
 	
 	self.attrString = as;
 }
@@ -145,9 +146,9 @@ static CGFloat kSpace = 2;
 	self.leftBorderView.backgroundColor = self.color;
 	
 	if (self.selected)
-		self.backgroundColor = self.selected ? self.color : [self.color colorWithAlphaComponent:.3];
+		self.backgroundColor = self.selected ? self.color : self.color;
 	else if (self.style & MGCStandardEventViewStylePlain)
-		self.backgroundColor = [self.color colorWithAlphaComponent:.3];
+        self.backgroundColor = self.color;
 	else
 		self.backgroundColor = [UIColor clearColor];
 	
