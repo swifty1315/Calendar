@@ -124,7 +124,8 @@ static CGFloat kSpace = 2;
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
-	self.leftBorderView.frame = CGRectMake(0, 0, 2, self.bounds.size.height);
+	self.leftBorderView.frame = CGRectMake(0, 0, 3, self.bounds.size.height);
+    
 	[self setNeedsDisplay];
 }
 
@@ -146,9 +147,9 @@ static CGFloat kSpace = 2;
 	self.leftBorderView.backgroundColor = self.color;
 	
 	if (self.selected)
-		self.backgroundColor = self.selected ? self.color : self.color;
+        self.backgroundColor = [self.color colorWithAlphaComponent:.3];
 	else if (self.style & MGCStandardEventViewStylePlain)
-        self.backgroundColor = self.color;
+        self.backgroundColor = [self.color colorWithAlphaComponent:.3];
 	else
 		self.backgroundColor = [UIColor clearColor];
 	
@@ -191,6 +192,14 @@ static CGFloat kSpace = 2;
 //    }
 
 	[self.attrString drawWithRect:drawRect options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin context:nil];
+    
+//    UIBezierPath *path = [UIBezierPath bezierPath];
+//    [path moveToPoint:CGPointMake(0.0, 0.0)];
+//    [path addLineToPoint:CGPointMake(0.0, rect.origin.y)];
+//    [path setLineWidth:3.0];
+//    [self.color setStroke];
+//    [path stroke];
+    
 }
 
 #pragma mark - NSCopying protocol
