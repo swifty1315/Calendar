@@ -61,10 +61,10 @@ typedef NS_OPTIONS(NSUInteger, MGCStandardEventViewStyle) {
 @property (nonatomic, copy)	NSString *detail;
 
 /*! The color is used for background, depending on the style. */
-@property (nonatomic) UIColor *color;
+@property (nonatomic) UIColor *lighterViewColor;
 
 /*! The color is used for leftView, depending on the style. */
-@property (nonatomic) UIColor *leftViewColor;
+@property (nonatomic) UIColor *darkerViewColor;
 
 /*! The color is used for background or text, depending on the style. */
 @property (nonatomic) UIColor *textColor;

@@ -368,8 +368,8 @@ static NSString* const EventCellReuseIdentifier = @"EventCellReuseIdentifier";
     // castil
     evCell.subtitle = @"123123 123 123 12 3123 123 123 891273 173 17389 172389 712983 123 123";//ev.location;
     evCell.detail = @"666 76 767 7676767676 767676 7 76767676 7667766 7 67 76 76 67 677676 666";
-    evCell.color = [UIColor colorWithCGColor:ev.calendar.CGColor];
-    evCell.style = MGCStandardEventViewStylePlain|MGCStandardEventViewStyleSubtitle|MGCStandardEventViewStyleDetail;
+    evCell.lighterViewColor = [UIColor colorWithCGColor:ev.calendar.CGColor];
+    evCell.style = MGCStandardEventViewStylePlain|MGCStandardEventViewStyleSubtitle|MGCStandardEventViewStyleDetail|MGCStandardEventViewStyleLeftShadow|MGCStandardEventViewStyleBigLeftOffset;
     evCell.style |= (type == MGCAllDayEventType) ?: MGCStandardEventViewStyleBorder;
     return evCell;
 }
@@ -425,8 +425,8 @@ static NSString* const EventCellReuseIdentifier = @"EventCellReuseIdentifier";
     EKCalendar *defaultCalendar = [self.eventStore defaultCalendarForNewEvents];
     
     MGCStandardEventView *evCell = [MGCStandardEventView new];
-    evCell.title = NSLocalizedString(@"New Event", nil);
-    evCell.color = [UIColor colorWithCGColor:defaultCalendar.CGColor];
+    evCell.title = NSLocalizedString(@"", nil);
+    evCell.lighterViewColor = [UIColor colorWithCGColor:defaultCalendar.CGColor];
     return evCell;
 }
 

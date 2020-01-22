@@ -49,8 +49,8 @@ static CGFloat kBigSpace = 18;
     if (self = [super initWithFrame:frame]) {
         self.contentMode = UIViewContentModeRedraw;
         
-        _color = [UIColor grayColor];
-        _leftViewColor = [UIColor blackColor];
+        _lighterViewColor = [UIColor lightGrayColor];
+        _darkerViewColor = [UIColor grayColor];
         _textColor = [UIColor blackColor];
         _style = MGCStandardEventViewStylePlain|MGCStandardEventViewStyleSubtitle;
         _font = [UIFont boldSystemFontOfSize:14];
@@ -143,9 +143,9 @@ static CGFloat kBigSpace = 18;
     [self setNeedsDisplay];
 }
 
-- (void)setColor:(UIColor*)color
+- (void)setLighterViewColor:(UIColor*)color
 {
-    _color = color;
+    _lighterViewColor = color;
     [self resetColors];
 }
 
@@ -158,12 +158,12 @@ static CGFloat kBigSpace = 18;
 
 - (void)resetColors
 {
-    self.leftBorderView.backgroundColor = self.leftViewColor;
+    self.leftBorderView.backgroundColor = self.darkerViewColor;
     
     if (self.selected)
-        self.backgroundColor = self.color;
+        self.backgroundColor = self.darkerViewColor;
     else if (self.style & MGCStandardEventViewStylePlain)
-        self.backgroundColor = self.color;
+        self.backgroundColor = self.lighterViewColor;
     else
         self.backgroundColor = [UIColor clearColor];
     
@@ -228,7 +228,7 @@ static CGFloat kBigSpace = 18;
     cell.title = self.title;
     cell.subtitle = self.subtitle;
     cell.detail = self.detail;
-    cell.color = self.color;
+    cell.lighterViewColor = self.lighterViewColor;
     cell.style = self.style;
     
     return cell;
