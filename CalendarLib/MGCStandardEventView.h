@@ -60,8 +60,11 @@ typedef NS_OPTIONS(NSUInteger, MGCStandardEventViewStyle) {
 /*! Detail - displayed with a smaller font and right aligned. */
 @property (nonatomic, copy)	NSString *detail;
 
-/*! The color is used for background or text, depending on the style. */
+/*! The color is used for background, depending on the style. */
 @property (nonatomic) UIColor *color;
+
+/*! The color is used for leftView, depending on the style. */
+@property (nonatomic) UIColor *leftViewColor;
 
 /*! The color is used for background or text, depending on the style. */
 @property (nonatomic) UIColor *textColor;

@@ -1775,7 +1775,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     self.timeScrollView.frame = CGRectMake(0, timedEventViewTop, self.bounds.size.width, timedEventsViewHeight);
     if (!self.timeScrollView.superview) {
-        [self addSubview:self.timeScrollView];
+        [self insertSubview:self.timeScrollView aboveSubview:self.timedEventsView];
     }
     
     NSDate *today = [NSDate date];
