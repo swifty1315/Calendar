@@ -49,6 +49,7 @@ static CGFloat kBigSpace = 18;
     if (self = [super initWithFrame:frame]) {
         self.contentMode = UIViewContentModeRedraw;
         
+        _useTopOffset = NO;
         _lighterViewColor = [UIColor lightGrayColor];
         _darkerViewColor = [UIColor grayColor];
         _textColor = [UIColor blackColor];
@@ -71,8 +72,11 @@ static CGFloat kBigSpace = 18;
         [s appendString:@"\u2022 "]; // 25CF // 2219 // 30FB
     }
     
-    if (self.title) {
+    if (self.useTopOffset) {
         [s appendString:@"\n"];
+    }
+    
+    if (self.title) {
         [s appendString:self.title];
     }
     
@@ -208,6 +212,11 @@ static CGFloat kBigSpace = 18;
     if (self.style & MGCStandardEventViewStyleLeftShadow) {
         UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.leftBorderView.bounds cornerRadius:0];
         
+        // remove shadow layer if it already added
+        for (CALayer *layer in self.leftBorderView.layer.sublayers) {
+            [layer removeFromSuperlayer];
+        }
+        
         CALayer *layer0 = [[CALayer alloc] init];
         layer0.shadowPath = shadowPath0.CGPath;
         layer0.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor;
@@ -228,8 +237,11 @@ static CGFloat kBigSpace = 18;
     cell.title = self.title;
     cell.subtitle = self.subtitle;
     cell.detail = self.detail;
+    cell.darkerViewColor = self.darkerViewColor;
+    cell.lighterViewColor = self.lighterViewColor;
     cell.lighterViewColor = self.lighterViewColor;
     cell.style = self.style;
+    cell.useTopOffset = self.useTopOffset;
     
     return cell;
 }

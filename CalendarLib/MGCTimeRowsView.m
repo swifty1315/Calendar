@@ -75,6 +75,11 @@
 	return self;
 }
 
+- (void)setWorktimeValues:(MGCWorktimeValues)worktimeValues {
+    _worktimeValues = worktimeValues;
+    [self setNeedsDisplay];
+}
+
 - (void)setShowsCurrentTime:(BOOL)showsCurrentTime
 {
 	_showsCurrentTime = showsCurrentTime;
@@ -158,6 +163,9 @@
         style.alignment = NSTextAlignmentRight;
         
         UIColor *foregroundColor = (mark == MGCDayPlannerTimeMarkCurrent ? self.currentTimeColor : self.timeColor);
+        if (mark == MGCDayPlannerTimeMarkDivider) {
+            foregroundColor = [UIColor blueColor];
+        }
         UIFont *font = (mark == MGCDayPlannerTimeMarkHalf) ? self.halfHourFont : self.hourFont;
         
         attrStr = [[NSAttributedString alloc]initWithString:str attributes:@{ NSFontAttributeName: font, NSForegroundColorAttributeName: foregroundColor, NSParagraphStyleAttributeName: style }];
@@ -280,6 +288,26 @@
 		// don't draw time mark if it intersects any other mark
 		drawTimeMark &= !CGRectIntersectsRect(r, rectTimeMark);
 	}
+    
+    if (self.worktimeValues.start != 0 || self.worktimeValues.end != 0) {
+        for (int i = 0; i < 2; ++i){
+            NSUInteger hour = i == 0 ? self.worktimeValues.start : self.worktimeValues.end;
+            NSAttributedString *markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkDivider time:(hour % 24)*3600];
+            CGSize markSize = [markAttrStr boundingRectWithSize:markSizeMax options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
+            CGFloat y = MGCAlignedFloat((hour - self.hourRange.location) * self.hourSlotHeight + self.insetsHeight) - lineWidth * .5;
+            CGRect r = MGCAlignedRectMake(kSpacing, y - markSize.height / 2., markSizeMax.width, markSize.height);
+
+            if (!CGRectIntersectsRect(r, rectCurTime) || !self.showsCurrentTime) {
+                 [markAttrStr drawInRect:r];
+            }
+             
+            CGRect lineRect = CGRectMake(self.timeColumnWidth - kSpacing, y, self.bounds.size.width - self.timeColumnWidth + kSpacing, 1);
+            CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);
+            UIRectFill(lineRect);
+        }
+    }
+    
+    
 
 	if (drawTimeMark) {
         [floatingMarkAttrStr drawInRect:rectTimeMark];

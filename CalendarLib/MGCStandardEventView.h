@@ -81,4 +81,7 @@ typedef NS_OPTIONS(NSUInteger, MGCStandardEventViewStyle) {
 /*! Font used to draw the event detail. Defaults to system font. */
 @property (nonatomic) UIFont *detailsFont;
 
+/*! Property used to add an empty line at top when start description. */
+@property (nonatomic) Boolean useTopOffset;
+
 @end

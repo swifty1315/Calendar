@@ -53,7 +53,8 @@ typedef enum : NSUInteger
 @property (nonatomic) UIColor *markColor;								// color of the mark around the date (default is black)
 @property (nonatomic) UIColor *dotColor;								// color of the dot (default is blue)
 @property (nonatomic) UIColor *separatorColor;                          // color of the separator line (default is light gray)
-@property (nonatomic) CGFloat headerHeight;								// height of the header
+@property (nonatomic) CGFloat headerHeight;	                            // height of the header
+
 
 - (void)setActivityIndicatorVisible:(BOOL)visible;
 

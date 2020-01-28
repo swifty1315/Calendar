@@ -31,6 +31,10 @@
 #import <UIKit/UIKit.h>
 #import "MGCDayPlannerView.h"   // for MGCDayPlannerTimeMark enum
 
+typedef struct MGCWorktimeValues {
+    NSUInteger start;
+    NSUInteger end;
+} MGCWorktimeValues;
 
 @protocol MGCTimeRowsViewDelegate;
 
@@ -52,6 +56,7 @@
 @property (nonatomic) UIColor *timeColor;				 // color used for time marks and lines
 @property (nonatomic) UIColor *currentTimeColor;		// color used for current time mark and line
 @property (nonatomic, weak) id<MGCTimeRowsViewDelegate> delegate;
+@property (nonatomic) MGCWorktimeValues worktimeValues;
 
 @end
 

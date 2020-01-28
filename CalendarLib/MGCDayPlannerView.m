@@ -160,6 +160,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 @property (nonatomic, assign) CGFloat startXScrollOffset;
 
 @property (nonatomic) NSUInteger numberOfTimeGrids;
+@property (strong, nonatomic) NSLock *timeRowsLock;
 @end
 
 
@@ -328,7 +329,14 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         timeRowView.timeColumnWidth = self.timeColumnWidth;
         timeRowView.insetsHeight = self.eventsViewInnerMargin;
         
-        timeRowView.frame = CGRectMake(i * self.frame.size.width, 0, self.timeScrollView.frame.size.width, self.timeScrollView.contentSize.height);
+        if (self.scrollableTimeGrid == YES && i == 1) {
+            timeRowView.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
+            timeRowView.worktimeValues = [self workTimeValuesAtDate:self.visibleDays.start];
+        } else {
+            self.timeRowsViews.firstObject.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
+        }
+        
+        timeRowView.frame = CGRectMake(i * self.frame.size.width, 0, _timeScrollView.frame.size.width, _timeScrollView.contentSize.height);
     }
 }
 
@@ -486,6 +494,10 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 - (void)refreshTimeRowsViewsWithHourRange:(NSRange)hourRange {
     for (int i = 0; i < self.timeRowsViews.count; ++i) {
         MGCTimeRowsView *timeRowView = self.timeRowsViews[i];
+        if (self.scrollableTimeGrid && i == 1) {
+            timeRowView.worktimeValues = [self workTimeValuesAtDate:[NSDate date]];
+        }
+        
         timeRowView.hourRange = hourRange;
         timeRowView.frame = CGRectMake(i * self.frame.size.width, 0, self.timeScrollView.frame.size.width, self.timeScrollView.contentSize.height);
     }
@@ -1556,6 +1568,13 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 #pragma mark - Reloading content
 
 - (void)reloadTimeGridViews {
+    
+    if (self.timeRowsLock == nil ){
+        self.timeRowsLock = [[NSLock alloc] init];
+    }
+    
+    [self.timeRowsLock lock];
+    
     for (UIView *timeGridView in self.timeRowsViews) {
         [timeGridView removeFromSuperview];
     }
@@ -1571,11 +1590,23 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         timeRowView.hourRange = self.hourRange;
         timeRowView.insetsHeight = self.eventsViewInnerMargin;
         timeRowView.timeColumnWidth = self.timeColumnWidth;
-        timeRowView.frame = CGRectMake(i * self.frame.size.width, 0, self.timeScrollView.frame.size.width, self.timeScrollView.contentSize.height);
+        if (i == 1 && self.visibleDays.start == self.visibleDays.end) {
+            timeRowView.worktimeValues = [self workTimeValuesAtDate:self.visibleDays.start];
+            timeRowView.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
+        } else {
+            MGCWorktimeValues values;
+            values.start = values.end = 0;
+            timeRowView.worktimeValues = values;
+            timeRowView.showsCurrentTime = NO;
+        }
+        
+        timeRowView.frame = CGRectMake(i * self.frame.size.width, 0, _timeScrollView.frame.size.width, _timeScrollView.contentSize.height);
         timeRowView.contentMode = UIViewContentModeRedraw;
         [_timeScrollView addSubview:timeRowView];
         [self.timeRowsViews addObject:timeRowView];
     }
+    
+    [self.timeRowsLock unlock];
 }
 
 // this is called whenever we recenter the views during scrolling
@@ -1784,6 +1815,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         for (int i = -1; i < self.timeRowsViews.count - 1; ++i) {
             MGCTimeRowsView *timeRowView = [self.timeRowsViews objectAtIndex:(i+1)];
             timeRowView.showsCurrentTime = [self.visibleDays containsDate:[today dateByAddingTimeInterval:i*24*60*60]];
+            timeRowView.worktimeValues = [self workTimeValuesAtDate:[today dateByAddingTimeInterval:i*24*60*60]];
         }
     } else {
         self.timeRowsViews.firstObject.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
@@ -2127,6 +2159,35 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     return ranges;
 }
 
+- (MGCWorktimeValues)workTimeValuesAtDate: (NSDate*)date
+{
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateFormat = @"H";
+    
+    MGCWorktimeValues values;
+    
+    if ([self.delegate respondsToSelector:@selector(dayPlannerView:numberOfDimmedTimeRangesAtDate:)]) {
+        NSInteger count = [self.delegate dayPlannerView:self numberOfDimmedTimeRangesAtDate:date];
+        
+        if (count > 0 && [self.delegate respondsToSelector:@selector(dayPlannerView:dimmedTimeRangeAtIndex:date:)]) {
+            
+            for (NSUInteger i = 0; i < count; i++) {
+                MGCDateRange *range = [self.delegate dayPlannerView:self dimmedTimeRangeAtIndex:i date:date];
+                
+                if (i == 0) {
+                    // dimmed range means not working range and here we get first dimmed range end time
+                    values.start = [[dateFormatter stringFromDate:range.end] intValue];
+                } else if (i == count - 1) {
+                    // we need to get start of last dimmed range time here
+                    values.end = [[dateFormatter stringFromDate:range.start] intValue];
+                }
+            }
+        }
+    }
+    
+    return values;
+}
+
 - (NSArray*)collectionView:(UICollectionView *)collectionView layout:(MGCTimedEventsViewLayout *)layout dimmingRectsForSection:(NSUInteger)section
 {
     NSDate *date = [self dateFromDayOffset:section];
@@ -2324,12 +2385,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     CGFloat pageWidth = self.timeScrollView.contentSize.width/3;
     CGFloat newXOffset = ABS(pageWidth + difference) > pageWidth*2 ? pageWidth : pageWidth + difference;
     
-
-//    while (newXOffset <= 0) {
-//        newXOffset = newXOffset + pageWidth;
-//    }
-    
-    if (self.selectDateAction == YES) {
+    if (self.selectDateAction == YES && newXOffset > pageWidth*2) {
         newXOffset = pageWidth;
     }
     
