@@ -7,6 +7,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class MGCDateRange;
+
 typedef enum: NSUInteger {
     MCDimmedTypeTop,
     MCDimmedTypeMiddle,
@@ -25,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) CGFloat patternOffset;
 // allow to draw lines on background
 @property (assign, nonatomic) BOOL shouldDrawShirt;
+@property (strong, nonatomic) MGCDateRange *timeRange;
 
 @end
 

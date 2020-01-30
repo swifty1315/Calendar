@@ -204,7 +204,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     _timeRowsViews = [NSMutableArray new];
     _eventCoveringType = TimedEventCoveringTypeClassic;
     _numberOfTimeGrids = 1;
-    _scrollableTimeGrid = NO;
+    _viewType = MGCDayViewType;
     
     _reuseQueue = [[MGCReusableObjectQueue alloc] init];
     _loadingDays = [NSMutableOrderedSet orderedSetWithCapacity:14];
@@ -262,9 +262,10 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 
 #pragma mark - Layout
 
-- (void)setScrollableTimeGrid:(Boolean)scrollableTimeGrid {
-    _scrollableTimeGrid = scrollableTimeGrid;
-    if (_scrollableTimeGrid == YES) {
+
+- (void)setViewType:(MGCViewType)viewType {
+    _viewType = viewType;
+    if (_viewType == MGCDayViewType) {
         [self setNumberOfTimeGrids:3];
     } else {
         [self setNumberOfTimeGrids:1];
@@ -308,7 +309,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     self.timedEventsViewLayout.timeColumnWidth = self.timeColumnWidth;
     self.timedEventsViewLayout.numberOfDays = self.numberOfVisibleDays;
-    self.timedEventsViewLayout.shouldUseOffset = self.scrollableTimeGrid;
+    self.timedEventsViewLayout.shouldUseOffset = self.viewType == MGCDayViewType;
     self.timedEventsViewLayout.dayColumnSize = self.dayColumnSize;
     [self.timedEventsViewLayout invalidateLayout];
     
@@ -328,10 +329,16 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         timeRowView.hourSlotHeight = self.hourSlotHeight;
         timeRowView.timeColumnWidth = self.timeColumnWidth;
         timeRowView.insetsHeight = self.eventsViewInnerMargin;
-        
-        if (self.scrollableTimeGrid == YES && i == 1) {
-            timeRowView.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
-            timeRowView.worktimeValues = [self workTimeValuesAtDate:self.visibleDays.start];
+        timeRowView.accentColor = self.accentColor;
+        if (self.viewType == MGCDayViewType) {
+            int multiplier = i - 1;
+            
+            // if middle row then check for current time
+            if (i == 1) {
+                timeRowView.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
+            }
+            
+            timeRowView.worktimeValues = [self workTimeValuesAtDate:[self.visibleDays.start dateByAddingTimeInterval:multiplier*24*60*60]];
         } else {
             self.timeRowsViews.firstObject.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
         }
@@ -349,7 +356,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     NSUInteger numberOfDays = MIN(self.numberOfVisibleDays, self.numberOfLoadedDays);
     CGFloat width;
     
-    if (self.scrollableTimeGrid == YES) {
+    if (self.viewType == MGCDayViewType) {
         width = self.bounds.size.width / numberOfDays;
     } else {
         width = (self.bounds.size.width - self.timeColumnWidth) / numberOfDays;
@@ -470,7 +477,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     self.timedEventsViewLayout.timeColumnWidth = self.timeColumnWidth;
     self.timedEventsViewLayout.numberOfDays = self.numberOfVisibleDays;
-    self.timedEventsViewLayout.shouldUseOffset = self.scrollableTimeGrid;
+    self.timedEventsViewLayout.shouldUseOffset = self.viewType == MGCDayViewType;
     self.timedEventsViewLayout.dayColumnSize = self.dayColumnSize;
     [self.timedEventsViewLayout invalidateLayout];
     
@@ -483,7 +490,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     CGFloat xOffset = 0;
     
-    if (self.scrollableTimeGrid == YES) {
+    if (self.viewType == MGCDayViewType) {
         xOffset = self.timeScrollView.contentOffset.x;
     }
     
@@ -494,7 +501,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 - (void)refreshTimeRowsViewsWithHourRange:(NSRange)hourRange {
     for (int i = 0; i < self.timeRowsViews.count; ++i) {
         MGCTimeRowsView *timeRowView = self.timeRowsViews[i];
-        if (self.scrollableTimeGrid && i == 1) {
+        if (self.viewType == MGCDayViewType && i == 1) {
             timeRowView.worktimeValues = [self workTimeValuesAtDate:[NSDate date]];
         }
         
@@ -1048,7 +1055,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         _timedEventsViewLayout.dayColumnSize = self.dayColumnSize;
         _timedEventsViewLayout.timeColumnWidth = self.timeColumnWidth;
         _timedEventsViewLayout.numberOfDays = self.numberOfVisibleDays;
-        _timedEventsViewLayout.shouldUseOffset = self.scrollableTimeGrid;
+        _timedEventsViewLayout.shouldUseOffset = self.viewType == MGCDayViewType;
         _timedEventsViewLayout.coveringType = self.eventCoveringType == TimedEventCoveringTypeComplex ? TimedEventCoveringTypeComplex : TimedEventCoveringTypeClassic;
     }
     return _timedEventsViewLayout;
@@ -1590,6 +1597,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         timeRowView.hourRange = self.hourRange;
         timeRowView.insetsHeight = self.eventsViewInnerMargin;
         timeRowView.timeColumnWidth = self.timeColumnWidth;
+        timeRowView.accentColor = self.accentColor;
         if (i == 1 && self.visibleDays.start == self.visibleDays.end) {
             timeRowView.worktimeValues = [self workTimeValuesAtDate:self.visibleDays.start];
             timeRowView.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
@@ -1620,7 +1628,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     self.timedEventsViewLayout.dayColumnSize = dayColumnSize;
     self.timedEventsViewLayout.timeColumnWidth = self.timeColumnWidth;
     self.timedEventsViewLayout.numberOfDays = self.numberOfVisibleDays;
-    self.timedEventsViewLayout.shouldUseOffset = self.scrollableTimeGrid;
+    self.timedEventsViewLayout.shouldUseOffset = self.viewType == MGCDayViewType;
     self.allDayEventsViewLayout.dayColumnWidth = dayColumnSize.width;
     self.allDayEventsViewLayout.eventCellHeight = self.allDayEventCellHeight;
     
@@ -1761,7 +1769,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     CGFloat timedEventViewTop = self.dayHeaderHeight + allDayEventsViewHeight;
     CGFloat timeColumnOffset = self.timeColumnWidth;
     
-    if (self.scrollableTimeGrid == YES) {
+    if (self.viewType == MGCDayViewType) {
         timeColumnOffset = 0;
     }
     
@@ -1787,7 +1795,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     CGFloat xOffst = self.timeColumnWidth;
     
-    if (self.scrollableTimeGrid == YES) {
+    if (self.viewType == MGCDayViewType) {
         xOffst = 0;
     }
     
@@ -1798,7 +1806,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     CGFloat contentWidth = self.bounds.size.width;
     
-    if (self.scrollableTimeGrid == YES) {
+    if (self.viewType == MGCDayViewType) {
         contentWidth = self.bounds.size.width * self.numberOfTimeGrids;
     }
     self.timeScrollView.contentSize = CGSizeMake(contentWidth, self.dayColumnSize.height);
@@ -1811,7 +1819,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     NSDate *today = [NSDate date];
     
-    if (self.scrollableTimeGrid == YES ) {
+    if (self.viewType == MGCDayViewType) {
         for (int i = -1; i < self.timeRowsViews.count - 1; ++i) {
             MGCTimeRowsView *timeRowView = [self.timeRowsViews objectAtIndex:(i+1)];
             timeRowView.showsCurrentTime = [self.visibleDays containsDate:[today dateByAddingTimeInterval:i*24*60*60]];
@@ -1836,7 +1844,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     CGFloat xOffset = 0;
     
-    if (self.scrollableTimeGrid == YES) {
+    if (self.viewType == MGCDayViewType) {
         xOffset  = self.timeScrollView.contentSize.width / 3;
     }
     
@@ -1865,7 +1873,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     self.timedEventsViewLayout.timeColumnWidth = self.timeColumnWidth;
     self.timedEventsViewLayout.numberOfDays = self.numberOfVisibleDays;
-    self.timedEventsViewLayout.shouldUseOffset = self.scrollableTimeGrid;
+    self.timedEventsViewLayout.shouldUseOffset = self.viewType == MGCDayViewType;
     self.timedEventsViewLayout.dayColumnSize = dayColumnSize;
     self.allDayEventsViewLayout.dayColumnWidth = dayColumnSize.width;
     self.allDayEventsViewLayout.eventCellHeight = self.allDayEventCellHeight;
@@ -1961,7 +1969,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 {
     MGCDayColumnCell *dayCell = [self.dayColumnsView dequeueReusableCellWithReuseIdentifier:DayColumnCellReuseIdentifier forIndexPath:indexPath];
     dayCell.headerHeight = self.dayHeaderHeight;
-    dayCell.separatorColor = self.scrollableTimeGrid == YES ? [UIColor clearColor] : self.daySeparatorsColor;
+    dayCell.separatorColor = self.viewType == MGCDayViewType ? [UIColor clearColor] : self.daySeparatorsColor;
     dayCell.dotColor = self.eventIndicatorDotColor;
     NSDate *date = [self dateFromDayOffset:indexPath.section];
     
@@ -2063,6 +2071,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         view.shouldDrawShirt = self.shouldDrawShirt;
         view.patternOffset = self.patternOffset;
         view.patternWidth = self.patternWidth;
+        view.clipsToBounds = NO;
         MCDimmedCollectionViewType type = MCDimmedTypeNone;
         
         if ([self.timedEventsView.collectionViewLayout isKindOfClass:[MGCTimedEventsViewLayout class]] == NO) {
@@ -2074,17 +2083,25 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         
         NSInteger dimmedRangesCount = [self collectionView:self.timedEventsView layout:layout dimmingRectsForSection:indexPath.section].count;
         
+        NSDate *date = [self dateFromDayOffset:indexPath.section];
+        NSArray *ranges = [self.dimmedTimeRangesCache objectForKey:date];
+        if (!ranges) {
+            ranges = [self dimmedTimeRangesAtDate:date];
+        }
+        view.timeRange = [ranges objectAtIndex:indexPath.row];
+        
         if (dimmedRangesCount >=3) {
             if (indexPath.row == 0) {
-                type = MCDimmedTypeTop;
+                type = self.viewType == MGCWeekViewType ? MCDimmedTypeTop : MCDimmedTypeNone;
             } else if (indexPath.row == 1) {
                 type = MCDimmedTypeMiddle;
             } else if (indexPath.row == 2){
-                type = MCDimmedTypeBottom;
+                type = self.viewType == MGCWeekViewType ? MCDimmedTypeBottom : MCDimmedTypeNone;
             } else {
                 NSAssert(NO, @"Error! undefined dimmed type");
             }
         }
+        
         
         view.viewType = type;
         [view setNeedsDisplay];
@@ -2169,7 +2186,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     if ([self.delegate respondsToSelector:@selector(dayPlannerView:numberOfDimmedTimeRangesAtDate:)]) {
         NSInteger count = [self.delegate dayPlannerView:self numberOfDimmedTimeRangesAtDate:date];
         
-        if (count > 0 && [self.delegate respondsToSelector:@selector(dayPlannerView:dimmedTimeRangeAtIndex:date:)]) {
+        if (count > 1 && [self.delegate respondsToSelector:@selector(dayPlannerView:dimmedTimeRangeAtIndex:date:)]) {
             
             for (NSUInteger i = 0; i < count; i++) {
                 MGCDateRange *range = [self.delegate dayPlannerView:self dimmedTimeRangeAtIndex:i date:date];
@@ -2200,13 +2217,28 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     NSMutableArray *rects = [NSMutableArray arrayWithCapacity:ranges.count];
     
+    int castil = 0;
     for (MGCDateRange *range in ranges) {
+        int additionalHeightValue = 8; // this needs to draw rounded rectangle with time in the middle which indicates "end of dimmed view" =)
+        
+        if (castil == 1) {
+            additionalHeightValue = 0;
+        }
+        
         if (!range.isEmpty) {
             CGFloat y1 = [self offsetFromDate:range.start];
             CGFloat y2 = [self offsetFromDate:range.end];
             
-            [rects addObject:[NSValue valueWithCGRect:CGRectMake(0, y1, 0, y2 - y1)]];
+            if (castil == 0){
+                [rects addObject:[NSValue valueWithCGRect:CGRectMake(0, y1, 0, y2 - y1 +  additionalHeightValue)]];
+            } else if (castil == 2) {
+                [rects addObject:[NSValue valueWithCGRect:CGRectMake(0, y1 - additionalHeightValue, 0, y2 - y1)]];
+            } else {
+                [rects addObject:[NSValue valueWithCGRect:CGRectMake(0, y1, 0, y2 - y1)]];
+            }
+            
         }
+        ++castil;
     }
     return rects;
 }
@@ -2393,7 +2425,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         
         self.dayColumnsView.contentOffset = CGPointMake(contentOffset.x, 0);
         self.timedEventsView.contentOffset = CGPointMake(contentOffset.x, self.timedEventsView.contentOffset.y);
-        if (self.scrollableTimeGrid == YES) {
+        if (self.viewType == MGCDayViewType) {
             self.timeScrollView.contentOffset = CGPointMake(newXOffset, self.timeScrollView.contentOffset.y);
         }
         
@@ -2403,12 +2435,12 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         if (self.scrollDirection & ScrollDirectionHorizontal) {
             self.dayColumnsView.contentOffset = CGPointMake(contentOffset.x, 0);
             self.allDayEventsView.contentOffset = CGPointMake(contentOffset.x, self.allDayEventsView.contentOffset.y);
-            if (self.scrollableTimeGrid == YES) {
+            if (self.viewType == MGCDayViewType) {
                 self.timeScrollView.contentOffset = CGPointMake(newXOffset, self.timeScrollView.contentOffset.y);
             }
         }
         else {
-            if (self.scrollableTimeGrid == YES) {
+            if (self.viewType == MGCDayViewType) {
                 self.timeScrollView.contentOffset = CGPointMake(pageWidth, contentOffset.y);
             } else {
                 self.timeScrollView.contentOffset = CGPointMake(0, contentOffset.y);
