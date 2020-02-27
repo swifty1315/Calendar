@@ -162,7 +162,7 @@
         NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
         style.alignment = NSTextAlignmentRight;
         
-        UIColor *foregroundColor = (mark == MGCDayPlannerTimeMarkCurrent ? self.currentTimeColor : self.timeColor);
+        UIColor *foregroundColor = (mark == MGCDayPlannerTimeMarkCurrent ? self.currentTimeColor : self.accentColor);
         if (mark == MGCDayPlannerTimeMarkDivider) {
             foregroundColor = self.accentColor;
         }
@@ -242,7 +242,6 @@
         CGContextSetLineDash(context, 0, NULL, 0);
         CGContextMoveToPoint(context, self.timeColumnWidth + 2, y);
         CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
-        
         CGContextStrokePath(context);
         
         
@@ -266,6 +265,8 @@
         if (self.showsFifteenHourLines && i < NSMaxRange(self.hourRange)) {
                    
                    // 15 minutes lines
+            
+            CGContextSetStrokeColorWithColor(context, self.timeColor.CGColor);
                    y = MGCAlignedFloat(y - self.hourSlotHeight/4.) - lineWidth * .5;
                    CGContextSetLineDash(context, 0, dash, 2);
                    CGContextMoveToPoint(context, self.timeColumnWidth + 2, y);
@@ -281,6 +282,8 @@
                    
                     // 45 minutes lines
                    y = MGCAlignedFloat(y + (self.hourSlotHeight/4.) * 2) - lineWidth * .5;
+                   
+            CGContextSetStrokeColorWithColor(context, self.timeColor.CGColor);
                    CGContextSetLineDash(context, 0, dash, 2);
                    CGContextMoveToPoint(context, self.timeColumnWidth + 2, y);
                    CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
