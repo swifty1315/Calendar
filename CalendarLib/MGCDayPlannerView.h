@@ -638,6 +638,16 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
 - (NSAttributedString*)dayPlannerView:(MGCDayPlannerView*)view attributedStringForDayHeaderAtDate:(NSDate*)date;
 
 /*!
+   @abstract   Asks the delegate for the background color of the day header for given date.
+   @param        view        The day planner view requesting the information.
+   @param        date        The date for the header.
+   @return     The background color to fill the label.
+   @discussion If nil is returned or the method is not implemented, a default background color will be applied.
+*/
+
+- (UIColor*)dayPlannerView:(MGCDayPlannerView*)view backgroundColorForDayHeaderAtDate:(NSDate*)date;
+
+/*!
     @abstract   Asks the delegate for the number of dimmed timed ranges at given date.
  */
 - (NSInteger)dayPlannerView:(MGCDayPlannerView*)view numberOfDimmedTimeRangesAtDate:(NSDate*)date;

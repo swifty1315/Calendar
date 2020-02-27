@@ -2020,6 +2020,11 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         accessoryTypes |= MGCDayColumnCellAccessoryDot;
     }
     
+    dayCell.dayLabel.backgroundColor = [UIColor clearColor];
+    if ([self.delegate respondsToSelector:@selector(dayPlannerView:backgroundColorForDayHeaderAtDate:)]) {
+        dayCell.dayLabel.backgroundColor = [self.delegate dayPlannerView:self backgroundColorForDayHeaderAtDate:date];
+    }
+    
     dayCell.accessoryTypes = accessoryTypes;
     return dayCell;
 }
