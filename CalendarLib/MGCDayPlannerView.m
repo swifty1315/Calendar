@@ -1814,7 +1814,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     self.timeScrollView.frame = CGRectMake(0, timedEventViewTop, self.bounds.size.width, timedEventsViewHeight);
     if (!self.timeScrollView.superview) {
-        [self addSubview:self.timeScrollView];
+        [self addSubview: self.timeScrollView];
     }
     
     NSDate *today = [NSDate date];
@@ -2071,7 +2071,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         
         MGCDimmedCollectionReusableView *view = [self.timedEventsView dequeueReusableSupplementaryViewOfKind:DimmingViewKind withReuseIdentifier:DimmingViewReuseIdentifier forIndexPath:indexPath];
         view.backgroundColor = [UIColor clearColor];
-        view.strokeColor = self.accentColor;
+        view.strokeColor = self.timeSeparatorsColor;
         view.itemHeight = self.hourSlotHeight;
         view.shouldDrawShirt = self.shouldDrawShirt;
         view.patternOffset = self.patternOffset;
