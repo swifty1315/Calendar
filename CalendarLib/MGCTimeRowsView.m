@@ -162,10 +162,18 @@
         NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
         style.alignment = NSTextAlignmentRight;
         
-        UIColor *foregroundColor = (mark == MGCDayPlannerTimeMarkCurrent ? self.currentTimeColor : self.accentColor);
-        if (mark == MGCDayPlannerTimeMarkDivider) {
+        UIColor *foregroundColor = [UIColor lightGrayColor];
+        
+        if (mark == MGCDayPlannerTimeMarkCurrent) {
+            foregroundColor = self.currentTimeColor;
+        } else if (mark == MGCDayPlannerTimeMarkHalf) {
+            foregroundColor = self.timeColor;
+        } else if (mark == MGCDayPlannerTimeMarkDivider) {
+            foregroundColor = self.accentColor;
+        } else {
             foregroundColor = self.accentColor;
         }
+        
         UIFont *font = (mark == MGCDayPlannerTimeMarkHalf) ? self.halfHourFont : self.hourFont;
         
         attrStr = [[NSAttributedString alloc]initWithString:str attributes:@{ NSFontAttributeName: font, NSForegroundColorAttributeName: foregroundColor, NSParagraphStyleAttributeName: style }];

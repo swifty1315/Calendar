@@ -53,9 +53,9 @@ typedef struct MGCWorktimeValues {
 @property (nonatomic) NSRange hourRange;                // range of displayed hours
 @property (nonatomic) UIFont *hourFont;					   // font used for hour time marks
 @property (nonatomic) UIFont *halfHourFont;               // font used for half hour time marks
-@property (nonatomic) UIColor *timeColor;				 // color used for time marks and lines
+@property (nonatomic) UIColor *timeColor;				 // color used for drawing lines and 15/45/30 minutes
 @property (nonatomic) UIColor *currentTimeColor;		// color used for current time mark and line
-@property (nonatomic) UIColor *accentColor;        // color used for drawing work time values
+@property (nonatomic) UIColor *accentColor;        // color used for drawing hour values
 @property (nonatomic, weak) id<MGCTimeRowsViewDelegate> delegate;
 @property (nonatomic) MGCWorktimeValues worktimeValues;
 
