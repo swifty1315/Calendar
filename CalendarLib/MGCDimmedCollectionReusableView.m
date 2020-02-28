@@ -80,7 +80,7 @@
         NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
         style.alignment = NSTextAlignmentCenter;
         UIFont *font = [UIFont boldSystemFontOfSize:10];
-        attrStr = [[NSAttributedString alloc]initWithString:str attributes:@{ NSFontAttributeName: font, NSForegroundColorAttributeName: self.strokeColor, NSParagraphStyleAttributeName: style }];
+        attrStr = [[NSAttributedString alloc]initWithString:str attributes:@{ NSFontAttributeName: font, NSForegroundColorAttributeName: self.scheduleBorderColor, NSParagraphStyleAttributeName: style }];
     }
     return attrStr;
 }
