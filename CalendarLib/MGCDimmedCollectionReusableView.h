@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MGCDimmedCollectionReusableView : UICollectionReusableView
 
 @property (assign, nonatomic) MCDimmedCollectionViewType viewType;
+@property (strong, nonatomic) UIColor *scheduleBorderColor;
 @property (strong, nonatomic) UIColor *strokeColor;
 @property (assign, nonatomic) CGFloat itemHeight;
 @property (assign, nonatomic) CGFloat patternWidth;

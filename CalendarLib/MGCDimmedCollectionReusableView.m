@@ -38,8 +38,8 @@
             
             UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:r cornerRadius:5];
             [path setLineWidth:1];
-            CGContextSetFillColorWithColor(context, self.strokeColor.CGColor);
-            CGContextSetStrokeColorWithColor(context, self.strokeColor.CGColor);
+            CGContextSetFillColorWithColor(context, self.scheduleBorderColor.CGColor);
+            CGContextSetStrokeColorWithColor(context, self.scheduleBorderColor.CGColor);
             [path stroke];
             
             UIBezierPath *trianglePath = [UIBezierPath new];

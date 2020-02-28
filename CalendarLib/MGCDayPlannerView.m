@@ -2072,6 +2072,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         MGCDimmedCollectionReusableView *view = [self.timedEventsView dequeueReusableSupplementaryViewOfKind:DimmingViewKind withReuseIdentifier:DimmingViewReuseIdentifier forIndexPath:indexPath];
         view.backgroundColor = [UIColor clearColor];
         view.strokeColor = self.timeSeparatorsColor;
+        view.scheduleBorderColor = self.accentColor;
         view.itemHeight = self.hourSlotHeight;
         view.shouldDrawShirt = self.shouldDrawShirt;
         view.patternOffset = self.patternOffset;
