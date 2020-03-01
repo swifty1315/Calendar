@@ -1635,7 +1635,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     }
     
     // x pos and width are adjusted in order to "hide" left and rigth borders
-    self.shadowView.frame = CGRectMake(-1, self.dayHeaderHeight, self.bounds.size.width + 2, 1);
+    self.shadowView.frame = CGRectMake(-1, self.dayHeaderHeight - 1, self.bounds.size.width + 2, 1);
     if (!self.shadowView.superview) {
             
         [self addSubview:self.shadowView];
@@ -1679,8 +1679,9 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     self.timeScrollView.frame = CGRectMake(0, timedEventViewTop, self.bounds.size.width, timedEventsViewHeight);
     if (!self.timeScrollView.superview) {
-        [self addSubview: self.timeScrollView];
+        [self insertSubview:self.timeScrollView belowSubview:self.timedEventsView];
     }
+    
     
     NSDate *today = [NSDate date];
     
