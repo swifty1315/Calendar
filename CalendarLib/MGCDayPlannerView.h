@@ -44,7 +44,6 @@ typedef NS_ENUM(NSUInteger, MGCViewType) {
 };
 
 typedef NS_ENUM(NSUInteger, MGCEventType) {
-    MGCAllDayEventType = 0,
     MGCTimedEventType
 };
 
@@ -173,20 +172,6 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
     @see        dayPlannerView:attributedStringForTimeMark:time: delegate method
  */
 @property (nonatomic) UIColor *currentTimeColor;
-
-/*!
-    @abstract    Returns the color of the dot in the header indicating that a day has events.
-    @discussion The default value is blue.
- */
-@property (nonatomic) UIColor *eventIndicatorDotColor;
-
-/*!
-    @abstract    Determines whether the day planner view shows all-day events.
-    @discussion If the value of this property is YES, the view displays a bar at the top with all-day events.
-                The default value is YES.
-    @see        numberOfVisibleDays
- */
-@property (nonatomic) BOOL showsAllDayEvents;
 
 /*!
     @abstract    The view that provides the background appearance.
@@ -398,13 +383,6 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
     @discussion
  */
 - (NSInteger)numberOfTimedEventsAtDate:(NSDate*)date;
-
-/*!
-    @abstract    Returns the number of all-day events at the specified date.
-    @param        date    Day for which events are requested (time portion is ignored)
-    @discussion
- */
-- (NSInteger)numberOfAllDayEventsAtDate:(NSDate*)date;
 
 /*!
     @abstract    Returns an array of visible event views currently displayed by the day planner view.

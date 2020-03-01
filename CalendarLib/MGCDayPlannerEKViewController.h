@@ -5,7 +5,7 @@
 //  Distributed under the MIT License
 //  Get the latest version from here:
 //
-//	https://github.com/jumartin/Calendar
+//    https://github.com/jumartin/Calendar
 //
 //  Copyright (c) 2014-2015 Julien Martin
 //
@@ -55,7 +55,7 @@
 
 @optional
 
-- (void)dayPlannerEKEViewController:(MGCDayPlannerEKViewController*)vc willPresentEventViewController:(EKEventViewController*)eventViewController;                                     
+- (void)dayPlannerEKEViewController:(MGCDayPlannerEKViewController*)vc willPresentEventViewController:(EKEventViewController*)eventViewController;
 - (UINavigationController*)dayPlannerEKViewController:(MGCDayPlannerEKViewController*)vc navigationControllerForPresentingEventViewController:(EKEventViewController*)eventViewController;
 
 @end
