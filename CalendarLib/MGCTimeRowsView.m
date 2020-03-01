@@ -41,9 +41,6 @@
 @property (nonatomic) CGRect hourStringRect;
 @property (nonatomic) CGRect minuteStringRect;
 
-
-
-
 @end
 
 
@@ -143,7 +140,7 @@
         return [NSString stringWithFormat:@":%02d", minutes];
     }
     // show only hours for week view
-    if (self.viewType == MGCWeekViewType) {
+    if (self.viewType == MGCWeekViewType && rounded == YES) {
         return [NSString stringWithFormat:@"%02d", hour];
     }
     return [NSString stringWithFormat:@"%02d:%02d", hour, minutes];
@@ -164,12 +161,12 @@
         NSString *str = [self stringForTime:ti rounded:rounded minutesOnly:minutesOnly];
     
         NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
-        style.alignment = NSTextAlignmentRight;
+        style.alignment = mark == MGCDayPlannerTimeMarkCurrent ? NSTextAlignmentCenter : NSTextAlignmentRight;
         
         UIColor *foregroundColor = [UIColor lightGrayColor];
         
         if (mark == MGCDayPlannerTimeMarkCurrent) {
-            foregroundColor = self.currentTimeColor;
+            foregroundColor = [UIColor whiteColor];
         } else if (mark == MGCDayPlannerTimeMarkHalf) {
             foregroundColor = self.timeColor;
         } else if (mark == MGCDayPlannerTimeMarkDivider) {
@@ -193,7 +190,8 @@
 
 - (void)drawRect:(CGRect)rect
 {
-    const CGFloat kSpacing = 5.;
+    const CGFloat kSpacing = 0;
+    const CGSize kCurrentTimeSize = CGSizeMake(52, 17);
     const CGFloat dash[2]= {2, 3};
     
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -212,11 +210,20 @@
     
     // draw current time mark
     if (self.showsCurrentTime && [self canDisplayTime:currentTime]) {
-        rectCurTime =  CGRectMake(kSpacing, y - markSize.height/2., markSizeMax.width, markSize.height);
-        [markAttrStr drawInRect:rectCurTime];
+        
+        //[markAttrStr drawInRect:rectCurTime];
         CGRect lineRect = CGRectMake(self.timeColumnWidth - kSpacing, y, self.bounds.size.width - self.timeColumnWidth + kSpacing, 1);
         CGContextSetFillColorWithColor(context, self.currentTimeColor.CGColor);
         UIRectFill(lineRect);
+        
+        //draw rectangle with time label where time label inside
+        UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, y - kCurrentTimeSize.height / 2, kCurrentTimeSize.width, kCurrentTimeSize.height) byRoundingCorners:UIRectCornerTopRight | UIRectCornerBottomRight cornerRadii:kCurrentTimeSize];
+        [path setLineWidth:1];
+        
+        CGContextSetStrokeColorWithColor(context, self.currentTimeColor.CGColor);
+        [path fill];
+        rectCurTime =  CGRectMake(0, y - kCurrentTimeSize.height/2 + 2, kCurrentTimeSize.width, kCurrentTimeSize.height);
+        [markAttrStr drawInRect:rectCurTime];
     }
     
     // calculate rect for the floating time mark
