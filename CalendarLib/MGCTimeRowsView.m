@@ -190,7 +190,7 @@
 
 - (void)drawRect:(CGRect)rect
 {
-    const CGFloat kSpacing = 0;
+    const CGFloat kSpacing = 6;
     const CGSize kCurrentTimeSize = CGSizeMake(52, 17);
     const CGFloat dash[2]= {2, 3};
     
@@ -259,7 +259,7 @@
         CGContextSetStrokeColorWithColor(context, self.timeColor.CGColor);
         CGContextSetLineWidth(context, lineWidth);
         CGContextSetLineDash(context, 0, NULL, 0);
-        CGContextMoveToPoint(context, self.timeColumnWidth + 2, y);
+        CGContextMoveToPoint(context, self.timeColumnWidth + 4, y);
         CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
         CGContextStrokePath(context);
         
@@ -268,7 +268,7 @@
         if (self.showsHalfHourLines && i < NSMaxRange(self.hourRange) && shouldDraw) {
             y = MGCAlignedFloat(y + self.hourSlotHeight/2.) - lineWidth * .5;
             CGContextSetLineDash(context, 0, dash, 2);
-            CGContextMoveToPoint(context, self.timeColumnWidth + 2, y);
+            CGContextMoveToPoint(context, self.timeColumnWidth + 4, y);
             CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
             CGContextStrokePath(context);
             
@@ -288,7 +288,7 @@
             CGContextSetStrokeColorWithColor(context, self.timeColor.CGColor);
                    y = MGCAlignedFloat(y - self.hourSlotHeight/4.) - lineWidth * .5;
                    CGContextSetLineDash(context, 0, dash, 2);
-                   CGContextMoveToPoint(context, self.timeColumnWidth + 2, y);
+                   CGContextMoveToPoint(context, self.timeColumnWidth + 4, y);
                    CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
                    CGContextStrokePath(context);
                    
@@ -304,7 +304,7 @@
                    
             CGContextSetStrokeColorWithColor(context, self.timeColor.CGColor);
                    CGContextSetLineDash(context, 0, dash, 2);
-                   CGContextMoveToPoint(context, self.timeColumnWidth + 2, y);
+                   CGContextMoveToPoint(context, self.timeColumnWidth + 4, y);
                    CGContextAddLineToPoint(context, self.timeColumnWidth + rect.size.width, y);
                    CGContextStrokePath(context);
                    
@@ -321,39 +321,41 @@
     }
     
     if ((self.worktimeValues.start != 0 || self.worktimeValues.end != 0) && self.worktimeValues.start < 25 && self.worktimeValues.end < 25) {
+        NSUInteger leftOffset = 2;
+        
         for (int i = 0; i < 2; ++i){
             NSUInteger hour = i == 0 ? self.worktimeValues.start : self.worktimeValues.end;
             NSAttributedString *markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkDivider time:(hour % 24)*3600];
             CGSize markSize = [markAttrStr boundingRectWithSize:markSizeMax options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
             CGFloat y = MGCAlignedFloat((hour - self.hourRange.location) * self.hourSlotHeight + self.insetsHeight) - lineWidth * .5;
-            CGRect r = MGCAlignedRectMake(kSpacing, y - markSize.height / 2., markSizeMax.width, markSize.height);
+            CGRect r = MGCAlignedRectMake(0, y - markSize.height / 2., markSizeMax.width, markSize.height);
 
             if (!CGRectIntersectsRect(r, rectCurTime) || !self.showsCurrentTime) {
-                 [markAttrStr drawInRect:r];
+                 //[markAttrStr drawInRect:r];
             }
              
-            CGRect lineRect = CGRectMake(self.timeColumnWidth + 2, y, self.bounds.size.width - self.timeColumnWidth + kSpacing, 1);
+            // draw time line
+            CGRect lineRect = CGRectMake(self.timeColumnWidth + 4, y, self.bounds.size.width - self.timeColumnWidth + leftOffset, 1);
             CGContextSetFillColorWithColor(context, self.accentColor.CGColor);
             UIRectFill(lineRect);
             
-            //draw rectangle with time label where time label inside
-            UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(r.origin.x + 12, r.origin.y - 1, 46, 15) cornerRadius:5];
+            //draw rectangle around time label
+            UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(r.origin.x + 8, r.origin.y - 1, 46, 15) cornerRadius:5];
             [path setLineWidth:1];
             
             CGContextSetStrokeColorWithColor(context, self.accentColor.CGColor);
             [path stroke];
             
+            // draw triangle
             UIBezierPath *trianglePath = [UIBezierPath new];
-            [trianglePath moveToPoint:(CGPoint){r.origin.x + 13, r.origin.y + 2.5}]; //right top
-            [trianglePath addLineToPoint:(CGPoint){r.origin.x + 13, r.origin.y + 9.5}]; // right bottom
-            [trianglePath addLineToPoint:(CGPoint){r.origin.x + 4, r.origin.y + (r.size.height / 2)}]; // left middle
-            [trianglePath addLineToPoint:(CGPoint){r.origin.x + 13, r.origin.y + 2.5}]; // right top
+            [trianglePath moveToPoint:(CGPoint){r.origin.x + 9, r.origin.y + 2.5}]; //right top
+            [trianglePath addLineToPoint:(CGPoint){r.origin.x + 9, r.origin.y + 9.5}]; // right bottom
+            [trianglePath addLineToPoint:(CGPoint){r.origin.x, r.origin.y + (r.size.height / 2)}]; // left middle
+            [trianglePath addLineToPoint:(CGPoint){r.origin.x + 9, r.origin.y + 2.5}]; // right top
             [trianglePath fill];
         }
     }
     
-    
-
     if (drawTimeMark) {
         [floatingMarkAttrStr drawInRect:rectTimeMark];
     }
