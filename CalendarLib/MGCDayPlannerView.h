@@ -190,6 +190,19 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
  */
 @property (nonatomic, copy) NSString *dateFormat;
 
+
+/*!
+   @abstract  Font used to draw hour marks on time rows
+*/
+
+@property (nonatomic) UIFont *hourFont;
+
+/*!
+   @abstract  Font used to draw 15/30/45 minutes marks on time rows
+*/
+
+@property (nonatomic) UIFont *halfHourFont;
+
 /*!
     @abstract    Scrollable range of days. Default is nil, for 'infinite' scrolling.
     @discussion    Upon assignement, `start` and `end` properties of `dateRange` are adjusted

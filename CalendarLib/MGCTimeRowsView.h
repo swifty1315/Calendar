@@ -43,6 +43,7 @@ typedef struct MGCWorktimeValues {
 // It is contained in a scrollview, which itself is a subview of the day planner view.
 @interface MGCTimeRowsView : UIView
 
+@property (nonatomic) MGCViewType viewType;             // user to change time format
 @property (nonatomic) NSCalendar *calendar;				// used to calculate current time
 @property (nonatomic) CGFloat hourSlotHeight;			// height of a one-hour slot (default is 65)
 @property (nonatomic) CGFloat insetsHeight;				// top and bottom margin height (default is 45)

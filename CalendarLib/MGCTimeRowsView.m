@@ -59,7 +59,7 @@
         _insetsHeight = 45;
         _timeColumnWidth = 40;
         _hourFont = [UIFont boldSystemFontOfSize:10];
-        _halfHourFont = [UIFont systemFontOfSize:10];
+        _halfHourFont = [UIFont systemFontOfSize:8];
         _timeColor = [UIColor lightGrayColor];
         _currentTimeColor = [UIColor redColor];
         _rounding = 15;
@@ -142,6 +142,10 @@
     if (minutesOnly) {
         return [NSString stringWithFormat:@":%02d", minutes];
     }
+    // show only hours for week view
+    if (self.viewType == MGCWeekViewType) {
+        return [NSString stringWithFormat:@"%02d", hour];
+    }
     return [NSString stringWithFormat:@"%02d:%02d", hour, minutes];
 }
 
@@ -155,7 +159,7 @@
     
     if (!attrStr) {
         BOOL rounded = (mark != MGCDayPlannerTimeMarkCurrent);
-        BOOL minutesOnly = (mark == MGCDayPlannerTimeMarkFloating);
+        BOOL minutesOnly = (mark == MGCDayPlannerTimeMarkFloating || (mark == MGCDayPlannerTimeMarkHalf && self.viewType == MGCWeekViewType));
     
         NSString *str = [self stringForTime:ti rounded:rounded minutesOnly:minutesOnly];
     

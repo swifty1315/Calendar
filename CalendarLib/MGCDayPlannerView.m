@@ -321,6 +321,8 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         timeRowView.timeColumnWidth = self.timeColumnWidth;
         timeRowView.insetsHeight = self.eventsViewInnerMargin;
         timeRowView.accentColor = self.accentColor;
+        timeRowView.viewType = self.viewType;
+        
         if (self.viewType == MGCDayViewType) {
             int multiplier = i - 1;
             
@@ -1496,6 +1498,14 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         timeRowView.insetsHeight = self.eventsViewInnerMargin;
         timeRowView.timeColumnWidth = self.timeColumnWidth;
         timeRowView.accentColor = self.accentColor;
+        if (self.hourFont != nil) {
+            timeRowView.hourFont = self.hourFont;
+        }
+               
+        if (self.halfHourFont != nil) {
+            timeRowView.halfHourFont = self.halfHourFont;
+        }
+        
         if (i == 1 && self.visibleDays.start == self.visibleDays.end) {
             timeRowView.worktimeValues = [self workTimeValuesAtDate:self.visibleDays.start];
             timeRowView.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
