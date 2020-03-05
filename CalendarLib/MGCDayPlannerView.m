@@ -2275,12 +2275,14 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     }
     
     self.scrollViewAnimationCompletionBlock = completion;
-    
-    [self scrollViewWillStartScrolling:self.timedEventsView direction:ScrollDirectionUnknown];
-    [self.timedEventsView setContentOffset:offset animated:animated];
-    
-    if (!animated || CGPointEqualToPoint(offset, prevOffset)) {
-        [self scrollViewDidEndScrolling:self.timedEventsView];
+    // prevent capturing self.controllingScrollView = self.timedEventsView if offsets are equals
+    if (self.timedEventsView.contentOffset.x != offset.x || self.timedEventsView.contentOffset.y != offset.y) {
+        [self scrollViewWillStartScrolling:self.timedEventsView direction:ScrollDirectionUnknown];
+        [self.timedEventsView setContentOffset:offset animated:animated];
+        
+        if (!animated || CGPointEqualToPoint(offset, prevOffset)) {
+            [self scrollViewDidEndScrolling:self.timedEventsView];
+        }
     }
 }
 
@@ -2341,7 +2343,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     [self lockScrollingDirection];
     
     if (self.scrollDirection & ScrollDirectionHorizontal) {
-        //[self recenterIfNeeded];
+        [self recenterIfNeeded];
     }
     
     [self synchronizeScrolling];
