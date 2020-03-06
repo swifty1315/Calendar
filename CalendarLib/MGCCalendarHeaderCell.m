@@ -71,28 +71,28 @@
         self.dayNumberLabel.layer.masksToBounds = YES;
         self.dayNumberLabel.layer.cornerRadius = 15.0;
         self.dayNumberLabel.textColor = self.selectedDayTextColor;
+        self.dayNameLabel.textColor = self.selectedDayTextColor;
     } else {
         self.highlightView.backgroundColor = self.dayBackgroundColor;
         self.dayNumberLabel.backgroundColor = [UIColor clearColor];
         self.dayNumberLabel.backgroundColor = [UIColor clearColor];
+        self.dayNumberLabel.textColor = self.dayTextColor;
+        self.dayNameLabel.textColor = self.dayTextColor;
     }
     
-    self.dayNumberLabel.textColor = self.dayTextColor;
-    self.dayNameLabel.textColor = self.dayTextColor;
-    
     if (self.isWeekend && !self.isToday) {
-        self.dayNumberLabel.textColor = self.weekendColor;
-        self.dayNameLabel.textColor = self.weekendColor;
+        //self.dayNumberLabel.textColor = self.weekendColor;
+        //self.dayNameLabel.textColor = self.weekendColor;
     }
     
     if (self.isPastDay) {
-        self.dayNumberLabel.textColor = self.pastDateColor;
-        self.dayNameLabel.textColor = self.pastDateColor;
+        //self.dayNumberLabel.textColor = self.pastDateColor;
+        //self.dayNameLabel.textColor = self.pastDateColor;
     }
     
     if (self.isToday) {
-        self.dayNumberLabel.textColor = self.todayColor;
-        self.dayNameLabel.textColor = self.todayColor;
+        //self.dayNumberLabel.textColor = self.todayColor;
+        //self.dayNameLabel.textColor = self.todayColor;
     }
 }
 

@@ -246,6 +246,7 @@ static CGFloat kItemHeight = 60;
     cell.weekendColor = self.weekendColor;
     cell.todayColor = self.accentColor;
     cell.dayBackgroundColor = self.headerBackgroundColor;
+    [cell layoutSubviews];
     return cell;
 }
 

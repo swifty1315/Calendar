@@ -167,13 +167,13 @@ static NSString* const EventCellReuseIdentifier = @"EventCellReuseIdentifier";
     
     self.bgQueue = dispatch_queue_create("MGCDayPlannerEKViewController.bgQueue", NULL);
     
-    [self.eventKitSupport checkEventStoreAccessForCalendar:^(BOOL granted) {
-        if (granted) {
-            NSArray *calendars = [self.eventStore calendarsForEntityType:EKEntityTypeEvent];
-            self.visibleCalendars = [NSSet setWithArray:calendars];
+    //[self.eventKitSupport checkEventStoreAccessForCalendar:^(BOOL granted) {
+      //  if (granted) {
+        //    NSArray *calendars = [self.eventStore calendarsForEntityType:EKEntityTypeEvent];
+          //  self.visibleCalendars = [NSSet setWithArray:calendars];
             [self reloadEvents];
-        }
-    }];
+      //  }
+    //}];
     
     self.dayPlannerView.calendar = self.calendar;
     [self.dayPlannerView registerClass:MGCStandardEventView.class forEventViewWithReuseIdentifier:EventCellReuseIdentifier];
