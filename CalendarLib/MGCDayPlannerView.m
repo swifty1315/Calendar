@@ -2237,7 +2237,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     if (scrollView == self.controllingScrollView) {
         ScrollDirection direction = self.scrollDirection;
         
-        [self recenterIfNeeded];
+        //[self recenterIfNeeded];
         
         self.scrollDirection = ScrollDirectionUnknown;
         self.timedEventsView.scrollEnabled = YES;
@@ -2283,6 +2283,8 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         if (!animated || CGPointEqualToPoint(offset, prevOffset)) {
             [self scrollViewDidEndScrolling:self.timedEventsView];
         }
+    } else {
+        dispatch_async(dispatch_get_main_queue(), self.scrollViewAnimationCompletionBlock);
     }
 }
 
