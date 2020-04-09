@@ -2276,7 +2276,8 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     self.scrollViewAnimationCompletionBlock = completion;
     // prevent capturing self.controllingScrollView = self.timedEventsView if offsets are equals
-    if (self.timedEventsView.contentOffset.x != offset.x || self.timedEventsView.contentOffset.y != offset.y) {
+    
+    if ((NSInteger)self.timedEventsView.contentOffset.x != (NSInteger)offset.x || (NSInteger)self.timedEventsView.contentOffset.y != (NSInteger)offset.y) {
         [self scrollViewWillStartScrolling:self.timedEventsView direction:ScrollDirectionUnknown];
         [self.timedEventsView setContentOffset:offset animated:animated];
         
