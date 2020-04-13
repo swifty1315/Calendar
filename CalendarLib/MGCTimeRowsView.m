@@ -325,13 +325,20 @@
         
         for (int i = 0; i < 2; ++i){
             NSUInteger hour = i == 0 ? self.worktimeValues.start : self.worktimeValues.end;
-            NSAttributedString *markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkDivider time:(hour % 24)*3600];
+            NSUInteger minute = i == 0 ? self.worktimeValues.startMinute : self.worktimeValues.endMinute;
+            NSAttributedString *markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkDivider time:(hour % 24)*3600 + minute * 60];
             CGSize markSize = [markAttrStr boundingRectWithSize:markSizeMax options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
-            CGFloat y = MGCAlignedFloat((hour - self.hourRange.location) * self.hourSlotHeight + self.insetsHeight) - lineWidth * .5;
+            
+            CGFloat minuteOffset = minute == 0 ? 0 : (self.hourSlotHeight / (60 / minute));
+            
+            CGFloat y = MGCAlignedFloat((hour - self.hourRange.location) * self.hourSlotHeight + minuteOffset + self.insetsHeight) - lineWidth * .5;
             CGRect r = MGCAlignedRectMake(0, y - markSize.height / 2., markSizeMax.width, markSize.height);
 
             if (!CGRectIntersectsRect(r, rectCurTime) || !self.showsCurrentTime) {
-                 //[markAttrStr drawInRect:r];
+                
+                CGRect rectMark = r;
+                rectMark.origin.x = kSpacing;
+                [markAttrStr drawInRect:rectMark];
             }
              
             // draw time line

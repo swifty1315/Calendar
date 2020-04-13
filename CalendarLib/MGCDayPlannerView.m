@@ -160,6 +160,10 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 
 @property (nonatomic) NSUInteger numberOfTimeGrids;
 @property (strong, nonatomic) NSLock *timeRowsLock;
+
+@property (strong, nonatomic) NSDateFormatter *workTimeRangesHourFormatter;
+@property (strong, nonatomic) NSDateFormatter *workTimeRangesMinuteFormatter;
+
 @end
 
 
@@ -214,6 +218,11 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillChangeStatusBarOrientation:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
+    
+    _workTimeRangesHourFormatter = [NSDateFormatter new];
+    [_workTimeRangesHourFormatter setDateFormat:@"H"];
+    _workTimeRangesMinuteFormatter = [NSDateFormatter new];
+    [_workTimeRangesMinuteFormatter setDateFormat:@"m"];
 }
 
 - (id)initWithCoder:(NSCoder*)coder
@@ -1137,9 +1146,10 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     if (x == 0) {
         x = self.timeColumnWidth;
     }
+    
     if (type == MGCTimedEventType) {
         CGFloat y =  [self offsetFromTime:self.durationForNewTimedEvent rounding:0];
-        CGRect rect = CGRectMake(x, y, self.dayColumnSize.width - self.timeColumnWidth, self.interactiveCellTimedEventHeight);
+        CGRect rect = CGRectMake(x, y, self.dayColumnSize.width - ((self.viewType == MGCDayViewType) ?  self.timeColumnWidth : 0), self.interactiveCellTimedEventHeight);
         return [self convertRect:rect fromView:self.timedEventsView];
     }
     
@@ -1259,6 +1269,11 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     CGRect rect = [self rectForNewEventOfType:type atDate:date];
     self.interactiveCell.frame = rect;
+    if (date == nil) {
+        [self.interactiveCell setHidden:YES];
+    } else {
+        [self.interactiveCell setHidden:NO];
+    }
     [self addSubview:self.interactiveCell];
     self.interactiveCell.hidden = NO;
     
@@ -1380,6 +1395,9 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     cellFrame.origin = origin;
     cellFrame.size = size;
     [UIView animateWithDuration:animationDur delay:0 options:/*UIViewAnimationOptionBeginFromCurrentState|*/UIViewAnimationOptionCurveEaseIn animations:^{
+        if (self.interactiveCell.isHidden == YES){
+            [self.interactiveCell setHidden:NO];
+        }
         self.interactiveCell.frame = cellFrame;
     } completion:^(BOOL finished) {
         if (didTransition) {
@@ -2008,8 +2026,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 
 - (MGCWorktimeValues)workTimeValuesAtDate: (NSDate*)date
 {
-    NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    dateFormatter.dateFormat = @"H";
+    
     
     MGCWorktimeValues values;
     
@@ -2023,10 +2040,13 @@ static const CGFloat kMaxHourSlotHeight = 150.;
                 
                 if (i == 0) {
                     // dimmed range means not working range and here we get first dimmed range end time
-                    values.start = [[dateFormatter stringFromDate:range.end] intValue];
+                    values.start = [[self.workTimeRangesHourFormatter stringFromDate:range.end] intValue];
+                    values.startMinute = [[self.workTimeRangesMinuteFormatter stringFromDate:range.end] intValue];
+                    
                 } else if (i == count - 1) {
                     // we need to get start of last dimmed range time here
-                    values.end = [[dateFormatter stringFromDate:range.start] intValue];
+                    values.end = [[self.workTimeRangesHourFormatter stringFromDate:range.start] intValue];
+                    values.endMinute = [[self.workTimeRangesMinuteFormatter stringFromDate:range.start] intValue];
                 }
             }
         }

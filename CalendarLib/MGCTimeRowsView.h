@@ -5,7 +5,7 @@
 //  Distributed under the MIT License
 //  Get the latest version from here:
 //
-//	https://github.com/jumartin/Calendar
+//    https://github.com/jumartin/Calendar
 //
 //  Copyright (c) 2014-2015 Julien Martin
 //
@@ -33,7 +33,9 @@
 
 typedef struct MGCWorktimeValues {
     NSUInteger start;
+    NSUInteger startMinute;
     NSUInteger end;
+    NSUInteger endMinute;
 } MGCWorktimeValues;
 
 @protocol MGCTimeRowsViewDelegate;
@@ -44,18 +46,18 @@ typedef struct MGCWorktimeValues {
 @interface MGCTimeRowsView : UIView
 
 @property (nonatomic) MGCViewType viewType;             // user to change time format
-@property (nonatomic) NSCalendar *calendar;				// used to calculate current time
-@property (nonatomic) CGFloat hourSlotHeight;			// height of a one-hour slot (default is 65)
-@property (nonatomic) CGFloat insetsHeight;				// top and bottom margin height (default is 45)
-@property (nonatomic) CGFloat timeColumnWidth;			// width of the time column on the left side (default is 40)
-@property (nonatomic) NSTimeInterval timeMark;			// time from start of day for the mark that appears when an event is moved around - set to 0 to hide it
-@property (nonatomic) BOOL showsCurrentTime;			// YES if shows red line for current time
+@property (nonatomic) NSCalendar *calendar;                // used to calculate current time
+@property (nonatomic) CGFloat hourSlotHeight;            // height of a one-hour slot (default is 65)
+@property (nonatomic) CGFloat insetsHeight;                // top and bottom margin height (default is 45)
+@property (nonatomic) CGFloat timeColumnWidth;            // width of the time column on the left side (default is 40)
+@property (nonatomic) NSTimeInterval timeMark;            // time from start of day for the mark that appears when an event is moved around - set to 0 to hide it
+@property (nonatomic) BOOL showsCurrentTime;            // YES if shows red line for current time
 @property (nonatomic, readonly) BOOL showsHalfHourLines; // returns YES if hourSlotHeight > 100
 @property (nonatomic) NSRange hourRange;                // range of displayed hours
-@property (nonatomic) UIFont *hourFont;					   // font used for hour time marks
+@property (nonatomic) UIFont *hourFont;                       // font used for hour time marks
 @property (nonatomic) UIFont *halfHourFont;               // font used for half hour time marks
-@property (nonatomic) UIColor *timeColor;				 // color used for drawing lines and 15/45/30 minutes
-@property (nonatomic) UIColor *currentTimeColor;		// color used for current time mark and line
+@property (nonatomic) UIColor *timeColor;                 // color used for drawing lines and 15/45/30 minutes
+@property (nonatomic) UIColor *currentTimeColor;        // color used for current time mark and line
 @property (nonatomic) UIColor *accentColor;        // color used for drawing hour values
 @property (nonatomic, weak) id<MGCTimeRowsViewDelegate> delegate;
 @property (nonatomic) MGCWorktimeValues worktimeValues;
