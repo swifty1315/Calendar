@@ -1132,11 +1132,14 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 - (CGRect)rectForNewEventOfType:(MGCEventType)type atDate:(NSDate*)date
 {
     NSUInteger section = [self dayOffsetFromDate:date];
-    CGFloat x = section * self.dayColumnSize.width;
+    CGFloat x = section * self.dayColumnSize.width - section * self.timeColumnWidth;
     
+    if (x == 0) {
+        x = self.timeColumnWidth;
+    }
     if (type == MGCTimedEventType) {
         CGFloat y =  [self offsetFromTime:self.durationForNewTimedEvent rounding:0];
-        CGRect rect = CGRectMake(x, y, self.dayColumnSize.width, self.interactiveCellTimedEventHeight);
+        CGRect rect = CGRectMake(x, y, self.dayColumnSize.width - self.timeColumnWidth, self.interactiveCellTimedEventHeight);
         return [self convertRect:rect fromView:self.timedEventsView];
     }
     
@@ -1230,8 +1233,9 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     self.isInteractiveCellForNewEvent = YES;
     self.interactiveCellType = type;
-    self.interactiveCellTouchPoint = CGPointMake(0, self.interactiveCellTimedEventHeight / 2);
+    self.interactiveCellTouchPoint = CGPointMake(self.timeColumnWidth, self.interactiveCellTimedEventHeight / 2);
     self.interactiveCellDate = date;
+    
     
     self.interactiveCell = [[MGCInteractiveEventView alloc]initWithFrame:CGRectZero];
     
@@ -1729,8 +1733,12 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     
     if (self.dragTimer == nil && self.interactiveCell && self.interactiveCellDate) {
         CGRect frame = self.interactiveCell.frame;
+        
         frame.origin = [self offsetFromDate:self.interactiveCellDate eventType:self.interactiveCellType];
-        frame.size.width = self.dayColumnSize.width;
+        if (frame.origin.x == 0) {
+            frame.origin.x = self.timeColumnWidth;
+        }
+        frame.size.width = self.dayColumnSize.width - ((self.viewType == MGCDayViewType) ?  self.timeColumnWidth : 0);
         self.interactiveCell.frame = frame;
         self.interactiveCell.hidden = (self.interactiveCellType == MGCTimedEventType && !CGRectIntersectsRect(self.timedEventsView.frame, frame));
     }
