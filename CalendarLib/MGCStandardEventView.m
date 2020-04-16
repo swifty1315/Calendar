@@ -80,7 +80,6 @@ static CGFloat kBigSpace = 18;
         [s appendString:self.title];
     }
     
-    self.font = [UIFont boldSystemFontOfSize:14];
     NSMutableAttributedString *as = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName: self.font }];
     
     if ([self shouldDrawSubtitleInRect:rect] && self.subtitle && self.subtitle.length > 0 && self.style & MGCStandardEventViewStyleSubtitle) {
@@ -239,7 +238,9 @@ static CGFloat kBigSpace = 18;
     cell.detail = self.detail;
     cell.darkerViewColor = self.darkerViewColor;
     cell.lighterViewColor = self.lighterViewColor;
-    cell.lighterViewColor = self.lighterViewColor;
+    cell.subtitleFont = self.subtitleFont;
+    cell.detailsFont = self.detailsFont;
+    cell.font = self.font;
     cell.style = self.style;
     cell.useTopOffset = self.useTopOffset;
     
