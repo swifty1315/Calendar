@@ -329,7 +329,7 @@
             NSAttributedString *markAttrStr = [self attributedStringForTimeMark:MGCDayPlannerTimeMarkDivider time:(hour % 24)*3600 + minute * 60];
             CGSize markSize = [markAttrStr boundingRectWithSize:markSizeMax options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
             
-            CGFloat minuteOffset = minute == 0 ? 0 : (self.hourSlotHeight / (60 / minute));
+            CGFloat minuteOffset = minute == 0 ? 0 : (self.hourSlotHeight / (60.0 / minute));
             
             CGFloat y = MGCAlignedFloat((hour - self.hourRange.location) * self.hourSlotHeight + minuteOffset + self.insetsHeight) - lineWidth * .5;
             CGRect r = MGCAlignedRectMake(0, y - markSize.height / 2., markSizeMax.width, markSize.height);
