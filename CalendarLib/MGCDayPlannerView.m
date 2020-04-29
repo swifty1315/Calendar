@@ -92,14 +92,19 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset
 {
     id<UICollectionViewDelegate> delegate = (id<UICollectionViewDelegate>)self.collectionView.delegate;
-    return [delegate collectionView:self.collectionView targetContentOffsetForProposedContentOffset:proposedContentOffset];
+    if (@available(iOS 9.0, *)) {
+        return [delegate collectionView:self.collectionView targetContentOffsetForProposedContentOffset:proposedContentOffset];
+    } else {
+        NSAssert(0, @"Not supported!");
+        return CGPointMake(0, 0);
+    }
 }
 
 
 @end
 
 
-@interface MGCDayPlannerView () <UICollectionViewDataSource, MGCTimedEventsViewLayoutDelegate, MGCAllDayEventsViewLayoutDelegate, UICollectionViewDelegateFlowLayout, MGCTimeRowsViewDelegate>
+@interface MGCDayPlannerView () <UICollectionViewDataSource, MGCTimedEventsViewLayoutDelegate, UICollectionViewDelegateFlowLayout, MGCTimeRowsViewDelegate>
 
 // subviews
 @property (nonatomic, readonly) UICollectionView *timedEventsView;
@@ -200,7 +205,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     _shouldDrawShirt = NO;
     _shouldShowMinutesOnDragging = YES;
     _timeRowsViews = [NSMutableArray new];
-    _eventCoveringType = TimedEventCoveringTypeClassic;
+    _eventCoveringType = MGCDayPlannerCoveringTypeClassic;
     _numberOfTimeGrids = 1;
     _viewType = MGCDayViewType;
     
@@ -537,8 +542,12 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 - (void)setAccentColor:(UIColor *)accentColor
 {
     _accentColor = accentColor;
-    for (UIView *v in [self.timedEventsView visibleSupplementaryViewsOfKind:DimmingViewKind]) {
-        v.backgroundColor = accentColor;
+    if (@available(iOS 9.0, *)) {
+        for (UIView *v in [self.timedEventsView visibleSupplementaryViewsOfKind:DimmingViewKind]) {
+            v.backgroundColor = accentColor;
+        }
+    } else {
+        NSAssert(0, @"Not supported!");
     }
 }
 
@@ -1416,10 +1425,6 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 // point in self coordinates
 - (void)moveInteractiveCellAtPoint:(CGPoint)point
 {
-    CGRect rightScrollRect = CGRectMake(CGRectGetMaxX(self.bounds) - 30, 0, 30, self.bounds.size.height);
-    CGRect leftScrollRect = CGRectMake(0, 0, self.timeColumnWidth + 20, self.bounds.size.height);
-    CGRect downScrollRect = CGRectMake(self.timeColumnWidth, CGRectGetMaxY(self.bounds) - 30, self.bounds.size.width, 30);
-    CGRect upScrollRect = CGRectMake(self.timeColumnWidth, self.timedEventsView.frame.origin.y, self.bounds.size.width, 30);
     
     if (self.dragTimer) {
         [self.dragTimer invalidate];
@@ -1427,7 +1432,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     }
     
     // speed depends on day column width
-    NSTimeInterval ti = (self.dayColumnSize.width / 100.) * 0.05;
+    //NSTimeInterval ti = (self.dayColumnSize.width / 100.) * 0.05;
     
     //    if (CGRectContainsPoint(rightScrollRect, point)) {
     //        // progressive speed
@@ -1597,7 +1602,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         [self.timedEventsView reloadData];
         
         MGCTimedEventsViewLayoutInvalidationContext *context = [MGCTimedEventsViewLayoutInvalidationContext new];
-        context.invalidatedSections = [NSIndexSet indexSetWithIndex:section];
+        context.invalidatedSections = [[NSIndexSet indexSetWithIndex:section] mutableCopy];
         [self.timedEventsView.collectionViewLayout invalidateLayoutWithContext:context];
     }
 }
@@ -1608,7 +1613,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     [self.dimmedTimeRangesCache removeAllObjects];
     
     MGCTimedEventsViewLayoutInvalidationContext *context = [MGCTimedEventsViewLayoutInvalidationContext new];
-    context.invalidatedSections = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.numberOfLoadedDays)];
+    context.invalidatedSections = [[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.numberOfLoadedDays)] mutableCopy];
     context.invalidateEventCells = NO;
     context.invalidateDimmingViews = YES;
     [self.timedEventsView.collectionViewLayout invalidateLayoutWithContext:context];
@@ -2027,9 +2032,11 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 - (MGCWorktimeValues)workTimeValuesAtDate: (NSDate*)date
 {
     
-    
     MGCWorktimeValues values;
-    
+    values.start = 0;
+    values.end = 0;
+    values.endMinute = 0;
+    values.start = 0;
     if ([self.delegate respondsToSelector:@selector(dayPlannerView:numberOfDimmedTimeRangesAtDate:)]) {
         NSInteger count = [self.delegate dayPlannerView:self numberOfDimmedTimeRangesAtDate:date];
         

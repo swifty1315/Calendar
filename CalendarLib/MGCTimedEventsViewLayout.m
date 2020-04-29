@@ -321,7 +321,6 @@ static NSString* const EventCellsKey = @"EventCellsKey";
 
 - (void)expandCellsToMaxWidthInCluster:(NSMutableArray<MGCEventCellLayoutAttributes *> *)cluster
 {
-    const NSUInteger padding = 2.f;
     
     // Expand the attributes to maximum possible width
     NSMutableArray<NSMutableArray<MGCEventCellLayoutAttributes *> *> *columns = [NSMutableArray new];
@@ -495,7 +494,13 @@ static NSString* const EventCellsKey = @"EventCellsKey";
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset
 {
     id<UICollectionViewDelegate> delegate = (id<UICollectionViewDelegate>)self.collectionView.delegate;
-    return [delegate collectionView:self.collectionView targetContentOffsetForProposedContentOffset:proposedContentOffset];
+    if (@available(iOS 9.0, *)) {
+        return [delegate collectionView:self.collectionView targetContentOffsetForProposedContentOffset:proposedContentOffset];
+    } else {
+        NSAssert(0, @"Error! Not supported");
+        return CGPointMake(0, 0);
+        // Fallback on earlier versions
+    }
 }
 
 @end
