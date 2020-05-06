@@ -41,7 +41,6 @@ typedef NS_ENUM(NSInteger, HeaderSection){
 static NSString *kCellIdentifier = @"CalendarHeaderCellId";
 static NSInteger kNumberOfDaysToDisplay = 7; //one week
 static CGFloat kDetailsLabelHeight = 0;
-static CGFloat kItemHeight = 60;
 
 #pragma mark - Initialization
 
@@ -123,7 +122,8 @@ static CGFloat kItemHeight = 60;
     [super layoutSubviews];
     
     CGFloat maxItemWidth = self.frame.size.width / kNumberOfDaysToDisplay;
-    self.flowLayout.itemSize = CGSizeMake(maxItemWidth, kItemHeight);
+    CGFloat itemHeight = (self.frame.size.width / kNumberOfDaysToDisplay) - 1;
+    self.flowLayout.itemSize = CGSizeMake(maxItemWidth, itemHeight);
     
     //always select the same day of the week when switching weeks (as the native apple calendar does)
 
