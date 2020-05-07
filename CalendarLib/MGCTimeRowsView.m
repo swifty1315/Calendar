@@ -58,6 +58,7 @@
         _hourFont = [UIFont boldSystemFontOfSize:10];
         _halfHourFont = [UIFont systemFontOfSize:8];
         _timeColor = [UIColor lightGrayColor];
+        _minuteStepColor = [UIColor lightGrayColor];
         _currentTimeColor = [UIColor redColor];
         _rounding = 15;
         _hourRange = NSMakeRange(0, 24);
@@ -168,7 +169,7 @@
         if (mark == MGCDayPlannerTimeMarkCurrent) {
             foregroundColor = [UIColor whiteColor];
         } else if (mark == MGCDayPlannerTimeMarkHalf) {
-            foregroundColor = self.timeColor;
+            foregroundColor = self.minuteStepColor;
         } else if (mark == MGCDayPlannerTimeMarkDivider) {
             foregroundColor = self.accentColor;
         } else {
