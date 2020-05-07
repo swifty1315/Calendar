@@ -528,6 +528,16 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     }
 }
 
+//public
+
+- (void)setMinuteStepColor:(UIColor *)minuteStepColor {
+    _minuteStepColor = minuteStepColor;
+    for (MGCTimeRowsView *timeRowView in self.timeRowsViews) {
+        timeRowView.minuteStepColor = minuteStepColor;
+        [timeRowView setNeedsDisplay];
+    }
+}
+
 // public
 - (void)setCurrentTimeColor:(UIColor *)currentTimeColor
 {

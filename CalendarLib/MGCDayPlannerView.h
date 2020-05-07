@@ -161,10 +161,17 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
 /*!
     @abstract    Returns the color of the horizontal separator lines between time slots.
     @discussion The default value is light gray.
-                The color is also used for time labels.
+                
     @see        dayPlannerView:attributedStringForTimeMark:time: delegate method
  */
 @property (nonatomic) UIColor *timeSeparatorsColor;
+
+/*!
+    @abstract    Returns the color of the minutes step numbers.
+    @discussion     The default value is light gray.
+ 
+ */
+@property (nonatomic) UIColor *minuteStepColor;
 
 /*!
     @abstract    Returns the color of the current time line and label.
