@@ -726,7 +726,9 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         
         // get the time portion
         CGPoint ptTimedEventsView = [self convertPoint:point toView:self.timedEventsView];
-        if ([self.timedEventsView pointInside:ptTimedEventsView withEvent:nil]) {
+        CGPoint roundedTimedEventsViewPt = CGPointMake(roundf(ptTimedEventsView.x), roundf(ptTimedEventsView.y));
+        
+        if ([self.timedEventsView pointInside:roundedTimedEventsViewPt withEvent:nil]) {
             // max time for is 23:59
             NSTimeInterval ti = fminf([self timeFromOffset:ptTimedEventsView.y rounding:15], 24 * 3600. - 60);
             date = [date dateByAddingTimeInterval:ti];
