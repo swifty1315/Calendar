@@ -1973,18 +1973,15 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         }
         view.timeRange = [ranges objectAtIndex:indexPath.row];
         
-        if (dimmedRangesCount >=3) {
+        if (dimmedRangesCount > 1) {
             if (indexPath.row == 0) {
                 type = self.viewType == MGCWeekViewType ? MCDimmedTypeTop : MCDimmedTypeNone;
-            } else if (indexPath.row == 1) {
-                type = MCDimmedTypeMiddle;
-            } else if (indexPath.row == 2){
+            } else if (indexPath.row == dimmedRangesCount - 1){
                 type = self.viewType == MGCWeekViewType ? MCDimmedTypeBottom : MCDimmedTypeNone;
             } else {
-                NSAssert(NO, @"Error! undefined dimmed type");
+                type = MCDimmedTypeMiddle;
             }
         }
-        
         
         view.viewType = type;
         [view setNeedsDisplay];
@@ -2090,7 +2087,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     for (MGCDateRange *range in ranges) {
         int additionalHeightValue = 8; // this needs to draw rounded rectangle with time in the middle which indicates "end of dimmed view" =)
         
-        if (castil == 1) {
+        if (castil > 0 && castil < ranges.count - 1) {
             additionalHeightValue = 0;
         }
         
@@ -2100,7 +2097,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
             
             if (castil == 0){
                 [rects addObject:[NSValue valueWithCGRect:CGRectMake(0, y1, 0, y2 - y1 +  additionalHeightValue)]];
-            } else if (castil == 2) {
+            } else if (castil == ranges.count - 1) {
                 [rects addObject:[NSValue valueWithCGRect:CGRectMake(0, y1 - additionalHeightValue, 0, y2 - y1)]];
             } else {
                 [rects addObject:[NSValue valueWithCGRect:CGRectMake(0, y1, 0, y2 - y1)]];
