@@ -110,6 +110,13 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
 
 @property (nonatomic) BOOL weekPagingEnabled;
 
+
+/*!
+ @abstract    If YES then event creation will be initiated by single tap else by long tap.
+ */
+
+@property (nonatomic) BOOL useSingleTapForEventCreation;
+
 /*!
     @abstract    Returns the size of a column (readonly).
     @discussion The width is calculated by dividing the view width by the number of visible days.

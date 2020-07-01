@@ -1061,6 +1061,10 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         UICollectionView *view = (UICollectionView*)gesture.view;
         CGPoint pt = [gesture locationInView:view];
         
+        MGCEventType type = MGCTimedEventType;
+        
+        
+        
         NSIndexPath *path = [view indexPathForItemAtPoint:pt];
         if (path)  // a cell was touched
         {
@@ -1068,6 +1072,26 @@ static const CGFloat kMaxHourSlotHeight = 150.;
             MGCEventType type = MGCTimedEventType;
             
             [self selectEventWithDelegate:YES type:type atIndex:path.item date:date];
+        } else if (self.useSingleTapForEventCreation == YES) {
+            //CREATE NEW EVENT
+            CGPoint ptSelf = [gesture locationInView:self];
+            CGFloat createEventSlotHeight = floor(self.durationForNewTimedEvent * self.hourSlotHeight / 60.0f / 60.0f);
+            NSDate *date = [self dateAtPoint:CGPointMake(ptSelf.x, ptSelf.y - createEventSlotHeight / 2) rounded:YES];
+            
+            if (![self beginCreateEventOfType:type atDate:date]) {
+                gesture.enabled = NO;
+                gesture.enabled = YES;
+            }
+            
+            
+            if (!self.acceptsTarget) {
+                [self endInteraction];
+            }
+            else if (date && [self.dataSource respondsToSelector:@selector(dayPlannerView:createNewEventOfType:atDate:)]) {
+                [self.dataSource dayPlannerView:self createNewEventOfType:self.interactiveCellType atDate:date];
+            }
+            
+            [self setUserInteractionEnabled:YES];
         }
     }
 }
