@@ -168,7 +168,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 
 @property (strong, nonatomic) NSDateFormatter *workTimeRangesHourFormatter;
 @property (strong, nonatomic) NSDateFormatter *workTimeRangesMinuteFormatter;
-
+@property (assign, nonatomic) BOOL forseHideNewEventCell;
 @end
 
 
@@ -719,7 +719,6 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     CGPoint ptDayColumnsView = [self convertPoint:point toView:self.dayColumnsView];
     ptDayColumnsView = CGPointMake(ptDayColumnsView.x + (_timeColumnWidth / 2), ptDayColumnsView.y);
     NSIndexPath *dayPath = [self.dayColumnsView indexPathForItemAtPoint:ptDayColumnsView];
-    
     if (dayPath) {
         // get the day/month/year portion of the date
         NSDate *date = [self dateFromDayOffset:dayPath.section];
@@ -727,6 +726,13 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         // get the time portion
         CGPoint ptTimedEventsView = [self convertPoint:point toView:self.timedEventsView];
         CGPoint roundedTimedEventsViewPt = CGPointMake(roundf(ptTimedEventsView.x), roundf(ptTimedEventsView.y));
+        
+        if (roundedTimedEventsViewPt.y < self.timedEventsView.bounds.origin.y) {
+            roundedTimedEventsViewPt.y = self.timedEventsView.bounds.origin.y;
+            self.forseHideNewEventCell = YES;
+        } else {
+            self.forseHideNewEventCell = NO;
+        }
         
         if ([self.timedEventsView pointInside:roundedTimedEventsViewPt withEvent:nil]) {
             // max time for is 23:59
@@ -1063,8 +1069,6 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         
         MGCEventType type = MGCTimedEventType;
         
-        
-        
         NSIndexPath *path = [view indexPathForItemAtPoint:pt];
         if (path)  // a cell was touched
         {
@@ -1291,7 +1295,6 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     self.interactiveCellTouchPoint = CGPointMake(self.timeColumnWidth, self.interactiveCellTimedEventHeight / 2);
     self.interactiveCellDate = date;
     
-    
     self.interactiveCell = [[MGCInteractiveEventView alloc]initWithFrame:CGRectZero];
     
     if ([self.dataSource respondsToSelector:@selector(dayPlannerView:viewForNewEventOfType:atDate:)]) {
@@ -1319,8 +1322,15 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     } else {
         [self.interactiveCell setHidden:NO];
     }
-    [self addSubview:self.interactiveCell];
-    self.interactiveCell.hidden = NO;
+    
+    
+    
+    if (self.forseHideNewEventCell == YES) {
+        [self.interactiveCell setHidden:YES];
+    } else {
+        [self addSubview:self.interactiveCell];
+        self.interactiveCell.hidden = NO;
+    }
     
     return YES;
 }
@@ -1408,6 +1418,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         }
     }
     else {
+        self.forseHideNewEventCell = NO;
         if ([self.dataSource respondsToSelector:@selector(dayPlannerView:canMoveEventOfType:atIndex:date:toType:date:)]) {
             if (date && ![self.dataSource dayPlannerView:self canMoveEventOfType:self.movingEventType atIndex:self.movingEventIndex date:self.movingEventDate toType:type date:date]) {
                 self.acceptsTarget = NO;
@@ -1442,6 +1453,10 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     [UIView animateWithDuration:animationDur delay:0 options:/*UIViewAnimationOptionBeginFromCurrentState|*/UIViewAnimationOptionCurveEaseIn animations:^{
         if (self.interactiveCell.isHidden == YES){
             [self.interactiveCell setHidden:NO];
+        }
+        
+        if (self.forseHideNewEventCell == YES) {
+            [self.interactiveCell setHidden:YES];
         }
         self.interactiveCell.frame = cellFrame;
     } completion:^(BOOL finished) {
