@@ -332,6 +332,8 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
  */
 - (void)scrollToDate:(NSDate*)date options:(MGCDayPlannerScrollType)options animated:(BOOL)animated;
 
+
+- (void)setEventCoveringType:(MGCDayPlannerCoveringType)eventCoveringType;
 /*!
     @abstract    Scrolls the view to the next "logical" date.
                 If the view shows at least 7 days, it is the next start of a week,
@@ -744,5 +746,17 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
                 you programmatically deselect the event.
  */
 - (void)dayPlannerView:(MGCDayPlannerView*)view didDeselectEventOfType:(MGCEventType)type atIndex:(NSUInteger)index date:(NSDate*)date;
+
+
+/*!
+    @abstract    Ask to move specific event at index path
+    @param        view        The day planner view object notifying about the selection change.
+    @param        indexPath        The index path of the event
+    @discussion    The day planner view calls this method when user tries to move event
+ */
+
+- (BOOL)dayPlannerView:(MGCDayPlannerView*)view shouldMoveEventAt:(NSIndexPath*)indexPath forDate:(NSDate*)date;
+
+- (BOOL)dayPlannerView:(MGCDayPlannerView*)view shouldLocateOnTopEventAtIndexPath:(NSIndexPath*)indexPath forDate:(NSDate*)date;
 
 @end

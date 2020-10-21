@@ -1342,6 +1342,11 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     UICollectionView *view = self.timedEventsView;
     NSDate *date = [self dateFromDayOffset:path.section];
     
+    
+    if (![self.delegate dayPlannerView:self shouldMoveEventAt:path forDate:date]) {
+        return NO;
+    }
+    
     if ([self.dataSource respondsToSelector:@selector(dayPlannerView:shouldStartMovingEventOfType:atIndex:date:)]) {
         if (![self.dataSource dayPlannerView:self shouldStartMovingEventOfType:type atIndex:path.item date:date]) {
             
@@ -2032,6 +2037,14 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 }
 
 #pragma mark - MGCTimedEventsViewLayoutDelegate
+
+- (BOOL)collectionView:(UICollectionView*)collectionView layout:(MGCTimedEventsViewLayout*)layout shouldLocateOnTopItenAtIndexPath:(NSIndexPath*)indexPath {
+    
+    NSDate *date = [self dateFromDayOffset:indexPath.section];
+    
+    return [self.delegate dayPlannerView:self shouldLocateOnTopEventAtIndexPath:indexPath forDate:date];
+}
+
 
 - (CGRect)collectionView:(UICollectionView *)collectionView layout:(MGCTimedEventsViewLayout *)layout rectForEventAtIndexPath:(NSIndexPath *)indexPath
 {

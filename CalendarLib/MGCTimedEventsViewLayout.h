@@ -5,7 +5,7 @@
 //  Distributed under the MIT License
 //  Get the latest version from here:
 //
-//	https://github.com/jumartin/Calendar
+//    https://github.com/jumartin/Calendar
 //
 //  Copyright (c) 2014-2015 Julien Martin
 //
@@ -74,6 +74,8 @@ typedef enum : NSUInteger
 
 // x and width of returned rect are ignored
 - (CGRect)collectionView:(UICollectionView*)collectionView layout:(MGCTimedEventsViewLayout*)layout rectForEventAtIndexPath:(NSIndexPath*)indexPath;
+- (BOOL)collectionView:(UICollectionView*)collectionView layout:(MGCTimedEventsViewLayout*)layout shouldLocateOnTopItenAtIndexPath:(NSIndexPath*)indexPath;
+
 - (NSArray*)collectionView:(UICollectionView*)collectionView layout:(MGCTimedEventsViewLayout*)layout dimmingRectsForSection:(NSUInteger)section;
 
 @end

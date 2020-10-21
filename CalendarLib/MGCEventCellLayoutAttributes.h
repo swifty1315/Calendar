@@ -5,7 +5,7 @@
 //  Distributed under the MIT License
 //  Get the latest version from here:
 //
-//	https://github.com/jumartin/Calendar
+//    https://github.com/jumartin/Calendar
 //
 //  Copyright (c) 2014-2015 Julien Martin
 //
@@ -35,5 +35,7 @@
 
 @property (nonatomic) CGFloat visibleHeight;  // height of the visible portion of the cell
 @property (nonatomic) NSUInteger numberOfOtherCoveredAttributes;    // number of events which share a time section with this attribute
+
+@property (nonatomic) BOOL isDottedPointView; // used to select time and should be on top of all
 
 @end

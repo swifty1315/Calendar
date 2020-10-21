@@ -5,7 +5,7 @@
 //  Distributed under the MIT License
 //  Get the latest version from here:
 //
-//	https://github.com/jumartin/Calendar
+//    https://github.com/jumartin/Calendar
 //
 //  Copyright (c) 2014-2015 Julien Martin
 //
@@ -43,27 +43,27 @@
 
 - (MGCDayPlannerView*)dayPlannerView
 {
-	return (MGCDayPlannerView*)self.view;
+    return (MGCDayPlannerView*)self.view;
 }
 
 - (void)setDayPlannerView:(MGCDayPlannerView*)dayPlannerView
 {
-	[super setView:dayPlannerView];
-	
-	if (!dayPlannerView.dataSource)
-		dayPlannerView.dataSource = self;
-	
-	if (!dayPlannerView.delegate)
-		dayPlannerView.delegate = self;
+    [super setView:dayPlannerView];
+    
+    if (!dayPlannerView.dataSource)
+        dayPlannerView.dataSource = self;
+    
+    if (!dayPlannerView.delegate)
+        dayPlannerView.delegate = self;
 }
 
 #pragma mark - UIViewController
 
 - (void)loadView
 {
-	MGCDayPlannerView *dayPlannerView = [[MGCDayPlannerView alloc]initWithFrame:CGRectZero];
-	dayPlannerView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-	self.dayPlannerView = dayPlannerView;
+    MGCDayPlannerView *dayPlannerView = [[MGCDayPlannerView alloc]initWithFrame:CGRectZero];
+    dayPlannerView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    self.dayPlannerView = dayPlannerView;
     self.dayPlannerView.autoresizesSubviews = YES;
 }
 
@@ -119,19 +119,19 @@
 
 - (NSInteger)dayPlannerView:(MGCDayPlannerView *)view numberOfEventsOfType:(MGCEventType)type atDate:(NSDate *)date
 {
-	return 0;
+    return 0;
 }
 
 - (MGCEventView*)dayPlannerView:(MGCDayPlannerView*)view viewForEventOfType:(MGCEventType)type atIndex:(NSUInteger)index date:(NSDate*)date
 {
-	NSLog(@"dayPlannerView:viewForEventOfType:atIndex:date: has to implemented in MGCDayPlannerViewController subclasses.");
-	return nil;
+    NSLog(@"dayPlannerView:viewForEventOfType:atIndex:date: has to implemented in MGCDayPlannerViewController subclasses.");
+    return nil;
 }
 
 - (MGCDateRange*)dayPlannerView:(MGCDayPlannerView*)view dateRangeForEventOfType:(MGCEventType)type atIndex:(NSUInteger)index date:(NSDate*)date
 {
-	NSLog(@"dayPlannerView:dateRangeForEventOfType:atIndex:date: has to implemented in MGCDayPlannerViewController subclasses.");
-	return nil;
+    NSLog(@"dayPlannerView:dateRangeForEventOfType:atIndex:date: has to implemented in MGCDayPlannerViewController subclasses.");
+    return nil;
 }
 
 #pragma mark - MGCDayPlannerViewDelegate
@@ -148,6 +148,14 @@
 - (void)dayPlannerView:(MGCDayPlannerView*)view didEndScrolling:(MGCDayPlannerScrollType)scrollType
 {
     [self.headerView selectDate:view.visibleDays.start];
+}
+
+- (BOOL)dayPlannerView:(MGCDayPlannerView*)view shouldMoveEventAt:(NSIndexPath *)indexPath forDate:(NSDate *)date {
+    return YES;
+}
+
+- (BOOL)dayPlannerView:(MGCDayPlannerView*)view shouldLocateOnTopEventAtIndexPath:(NSIndexPath*)indexPath forDate:(NSDate*)date {
+    return NO;
 }
 
 @end
