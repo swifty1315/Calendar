@@ -95,14 +95,6 @@ static CGFloat kBigSpace = 18;
         [as appendAttributedString:detail];
     }
     
-    //NSTextTab *t = [[NSTextTab alloc]initWithTextAlignment:NSTextAlignmentRight location:rect.size.width options:[[NSDictionary alloc] init]];
-    //NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
-    //style.tabStops = @[t];
-    //style.hyphenationFactor = .4;
-    //style.lineBreakMode = NSLineBreakByTruncatingMiddle;
-    //[as addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, as.length)];
-    
-    //UIColor *color = self.selected ? [UIColor whiteColor] : self.textColor;
     [as addAttribute:NSForegroundColorAttributeName value:self.textColor range:NSMakeRange(0, as.length)];
     
     self.attrString = as;
@@ -131,7 +123,7 @@ static CGFloat kBigSpace = 18;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.leftBorderView.frame = CGRectMake(0, 0, 3, self.bounds.size.height);
+    self.leftBorderView.frame = CGRectMake(0, 0, 6, self.bounds.size.height);
     self.leftBorderView.hidden = NO;
     self.leftBorderView.clipsToBounds = NO;
     self.clipsToBounds = NO;
@@ -204,15 +196,14 @@ static CGFloat kBigSpace = 18;
     
     [self redrawStringInRect:drawRect];
     
-    //CGRect boundingRect = [self.attrString boundingRectWithSize:CGSizeMake(drawRect.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     drawRect.size.height = fminf(drawRect.size.height, self.visibleHeight);
     [self.attrString drawWithRect:drawRect options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin context:nil];
     
     if (self.style & MGCStandardEventViewStyleLeftShadow) {
-        UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.leftBorderView.bounds cornerRadius:0];
+        UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:0];
         
         // remove shadow layer if it already added
-        for (CALayer *layer in self.leftBorderView.layer.sublayers) {
+        for (CALayer *layer in self.layer.sublayers) {
             [layer removeFromSuperlayer];
         }
         
@@ -222,9 +213,9 @@ static CGFloat kBigSpace = 18;
         layer0.shadowOpacity = 1;
         layer0.shadowRadius = 2;
         layer0.shadowOffset = CGSizeMake(-2, 0);
-        layer0.bounds = self.leftBorderView.bounds;
-        layer0.position = self.leftBorderView.center;
-        [self.leftBorderView.layer addSublayer:layer0];
+        layer0.bounds = self.bounds;
+        layer0.position = self.center;
+        [self.layer addSublayer:layer0];
     }
 }
 
