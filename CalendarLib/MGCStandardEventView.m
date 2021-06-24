@@ -137,12 +137,19 @@ static CGFloat kBigSpace = 18;
     }
     UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:0];
     
-    self.layer.shadowPath = shadowPath0.CGPath;
-    self.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor;
-    self.layer.shadowOpacity = 1;
-    self.layer.shadowRadius = 2;
-    self.layer.shadowOffset = CGSizeMake(-2, 0);
-    self.layer.position = self.center;
+    // remove shadow layer if it already added
+    for (CALayer *layer in self.layer.sublayers) {
+        [layer removeFromSuperlayer];
+    }
+    
+    CALayer *layer0 = [[CALayer alloc] init];
+    layer0.shadowPath = shadowPath0.CGPath;
+    layer0.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor;
+    layer0.shadowOpacity = 1;
+    layer0.shadowRadius = 2;
+    layer0.shadowOffset = CGSizeMake(-2, 0);
+    layer0.position = self.center;
+    [self.layer addSublayer:layer0];
     
     [self setNeedsDisplay];
 }
@@ -209,7 +216,22 @@ static CGFloat kBigSpace = 18;
     [self.attrString drawWithRect:drawRect options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin context:nil];
     
     if (self.style & MGCStandardEventViewStyleLeftShadow) {
-
+//        UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:0];
+//
+//        // remove shadow layer if it already added
+//        for (CALayer *layer in self.layer.sublayers) {
+//            [layer removeFromSuperlayer];
+//        }
+//
+//        CALayer *layer0 = [[CALayer alloc] init];
+//        layer0.shadowPath = shadowPath0.CGPath;
+//        layer0.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor;
+//        layer0.shadowOpacity = 1;
+//        layer0.shadowRadius = 2;
+//        layer0.shadowOffset = CGSizeMake(-2, 0);
+//        layer0.bounds = self.bounds;
+//        layer0.position = self.center;
+//        [self.layer addSublayer:layer0];
     }
 }
 
