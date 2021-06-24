@@ -123,11 +123,13 @@ static CGFloat kBigSpace = 18;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
     self.leftBorderView.frame = CGRectMake(0, 0, 6, self.bounds.size.height);
     self.leftBorderView.hidden = NO;
     self.leftBorderView.clipsToBounds = NO;
     self.clipsToBounds = NO;
     self.layer.cornerRadius = 3.0;
+
     self.leftBorderView.layer.cornerRadius = 3.0;
     if (@available(iOS 11.0, *)) {
         self.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMinXMaxYCorner;
@@ -135,6 +137,24 @@ static CGFloat kBigSpace = 18;
     } else {
         // none here
     }
+    
+    UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:0];
+    
+    // remove shadow layer if it already added
+    for (CALayer *layer in self.layer.sublayers) {
+        [layer removeFromSuperlayer];
+    }
+    
+    CALayer *layer0 = [[CALayer alloc] init];
+    layer0.shadowPath = shadowPath0.CGPath;
+    layer0.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor;
+    layer0.shadowOpacity = 1;
+    layer0.shadowRadius = 2;
+    layer0.shadowOffset = CGSizeMake(-2, 0);
+    layer0.bounds = self.bounds;
+    layer0.position = self.center;
+    [self.layer addSublayer:layer0];
+    
     [self setNeedsDisplay];
 }
 
@@ -200,22 +220,22 @@ static CGFloat kBigSpace = 18;
     [self.attrString drawWithRect:drawRect options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin context:nil];
     
     if (self.style & MGCStandardEventViewStyleLeftShadow) {
-        UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:0];
-        
-        // remove shadow layer if it already added
-        for (CALayer *layer in self.layer.sublayers) {
-            [layer removeFromSuperlayer];
-        }
-        
-        CALayer *layer0 = [[CALayer alloc] init];
-        layer0.shadowPath = shadowPath0.CGPath;
-        layer0.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor;
-        layer0.shadowOpacity = 1;
-        layer0.shadowRadius = 2;
-        layer0.shadowOffset = CGSizeMake(-2, 0);
-        layer0.bounds = self.bounds;
-        layer0.position = self.center;
-        [self.layer addSublayer:layer0];
+//        UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:0];
+//
+//        // remove shadow layer if it already added
+//        for (CALayer *layer in self.layer.sublayers) {
+//            [layer removeFromSuperlayer];
+//        }
+//
+//        CALayer *layer0 = [[CALayer alloc] init];
+//        layer0.shadowPath = shadowPath0.CGPath;
+//        layer0.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor;
+//        layer0.shadowOpacity = 1;
+//        layer0.shadowRadius = 2;
+//        layer0.shadowOffset = CGSizeMake(-2, 0);
+//        layer0.bounds = self.bounds;
+//        layer0.position = self.center;
+//        [self.layer addSublayer:layer0];
     }
 }
 
