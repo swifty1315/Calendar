@@ -84,14 +84,14 @@ static CGFloat kBigSpace = 18;
     
     if ([self shouldDrawSubtitleInRect:rect] && self.subtitle && self.subtitle.length > 0 && self.style & MGCStandardEventViewStyleSubtitle) {
         NSMutableString *s  = [NSMutableString stringWithFormat:@"\n%@", self.subtitle];
-        NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName:self.subtitleFont}];
+        NSMutableAttributedString *subtitle = [[NSMutableAttributedString alloc] initWithString:s attributes:@{NSFontAttributeName:self.subtitleFont}];
         [as appendAttributedString:subtitle];
     }
     
     if ([self shouldDrawDetailsInRect:rect] && self.detail && self.detail.length > 0 && self.style & MGCStandardEventViewStyleDetail) {
         
         NSMutableString *s = [NSMutableString stringWithFormat:@"\n%@", self.detail];
-        NSMutableAttributedString *detail = [[NSMutableAttributedString alloc]initWithString:s attributes:@{NSFontAttributeName:self.detailsFont}];
+        NSMutableAttributedString *detail = [[NSMutableAttributedString alloc] initWithString:s attributes:@{NSFontAttributeName:self.detailsFont}];
         [as appendAttributedString:detail];
     }
     
@@ -132,21 +132,12 @@ static CGFloat kBigSpace = 18;
     if (@available(iOS 11.0, *)) {
         self.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMinXMaxYCorner;
         self.leftBorderView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMinXMaxYCorner;
-    } else {
-        // none here
     }
-   // UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:0];
-    
-    // remove shadow layer if it already added
-   // for (CALayer *layer in self.layer.sublayers) {
-     //   [layer removeFromSuperlayer];
-    //}
+ 
     self.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor;
     self.layer.shadowOpacity = 1;
-    self.layer.shadowRadius = 5;
+    self.layer.shadowRadius = 10;
     self.layer.shadowOffset = CGSizeMake(-2, 0);
-    //self.layer.position = self.center;
-    //[self.layer addSublayer:layer0];
     
     [self setNeedsDisplay];
 }
@@ -211,25 +202,6 @@ static CGFloat kBigSpace = 18;
     
     drawRect.size.height = fminf(drawRect.size.height, self.visibleHeight);
     [self.attrString drawWithRect:drawRect options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin context:nil];
-    
-    if (self.style & MGCStandardEventViewStyleLeftShadow) {
-//        UIBezierPath *shadowPath0 = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:0];
-//
-//        // remove shadow layer if it already added
-//        for (CALayer *layer in self.layer.sublayers) {
-//            [layer removeFromSuperlayer];
-//        }
-//
-//        CALayer *layer0 = [[CALayer alloc] init];
-//        layer0.shadowPath = shadowPath0.CGPath;
-//        layer0.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25].CGColor;
-//        layer0.shadowOpacity = 1;
-//        layer0.shadowRadius = 2;
-//        layer0.shadowOffset = CGSizeMake(-2, 0);
-//        layer0.bounds = self.bounds;
-//        layer0.position = self.center;
-//        [self.layer addSublayer:layer0];
-    }
 }
 
 #pragma mark - NSCopying protocol
