@@ -31,7 +31,7 @@
 #import "MGCStandardEventView.h"
 
 static CGFloat kSpace = 2;
-static CGFloat kBigSpace = 18;
+static CGFloat kBigSpace = 25;
 
 @interface MGCStandardEventView ()
 
@@ -58,6 +58,7 @@ static CGFloat kBigSpace = 18;
         _subtitleFont = [UIFont boldSystemFontOfSize:13];
         _detailsFont = [UIFont systemFontOfSize:12];
         _leftBorderView = [[UIView alloc]initWithFrame:CGRectZero];
+        _viewType = MGCEventViewTypeStandard;
         [self addSubview:_leftBorderView];
     }
     return self;
@@ -123,7 +124,8 @@ static CGFloat kBigSpace = 18;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.leftBorderView.frame = CGRectMake(0, 0, 6, self.bounds.size.height);
+    NSInteger width = self.viewType == MGCEventViewTypeStandard ? 6 : 3;
+    self.leftBorderView.frame = CGRectMake(0, 0, width, self.bounds.size.height);
     self.leftBorderView.hidden = NO;
     self.leftBorderView.clipsToBounds = NO;
     self.clipsToBounds = NO;

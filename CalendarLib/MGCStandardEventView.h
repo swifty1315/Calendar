@@ -30,6 +30,10 @@
 
 #import "MGCEventView.h"
 
+typedef enum: NSUInteger {
+    MGCEventViewTypeStandard = 0,
+    MGCEventViewTypeCompact = 1
+} MGCEventViewType;
 
 /*! Presentation styles for the view */
 typedef NS_OPTIONS(NSUInteger, MGCStandardEventViewStyle) {
@@ -83,5 +87,8 @@ typedef NS_OPTIONS(NSUInteger, MGCStandardEventViewStyle) {
 
 /*! Property used to add an empty line at top when start description. */
 @property (nonatomic) Boolean useTopOffset;
+
+/*! Property used to indicate event view type. */
+@property (nonatomic) MGCEventViewType viewType;
 
 @end
