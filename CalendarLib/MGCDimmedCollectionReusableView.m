@@ -35,12 +35,14 @@
             } else if (self.viewType == MCDimmedTypeBottom) {
                 r = CGRectMake(9, 1, self.frame.size.width - 10, 15);
             }
+            [self drawStripPatternWithType:self.viewType];
             
             UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:r cornerRadius:5];
             [path setLineWidth:1];
             CGContextSetFillColorWithColor(context, self.scheduleBorderColor.CGColor);
             CGContextSetStrokeColorWithColor(context, self.scheduleBorderColor.CGColor);
             [path stroke];
+            //[path fill];
             
             UIBezierPath *trianglePath = [UIBezierPath new];
             [trianglePath moveToPoint:(CGPoint){9, r.origin.y + 4}]; //right top
@@ -51,23 +53,33 @@
             r.origin.y = r.origin.y + 1.5;
             [attrSTr drawInRect:r];
         } else if (self.viewType == MCDimmedTypeMiddle) {
-            int numberOfLines = self.frame.size.height + self.frame.size.width / (self.patternWidth + self.patternOffset) ;
-            int leftBottomX = 0; // left bottom
-            int leftBottomY = self.frame.size.height; // left bottom and height of block
-            
-            int rightTopY = 0;
-            int rightTopX = self.frame.size.width;
-            
-            for (int j = 1; j <= numberOfLines; ++j) {
-                int step = j * (self.patternWidth + self.patternOffset);
-                CGContextRef context = UIGraphicsGetCurrentContext();
-                CGContextSetStrokeColorWithColor(context, self.strokeColor.CGColor);
-                CGContextSetLineWidth(context, self.patternWidth);
-                CGContextMoveToPoint(context, MAX(step - self.frame.size.height, leftBottomX), MAX(leftBottomY - step, rightTopY));
-                CGContextAddLineToPoint(context, MIN(leftBottomX + step, rightTopX), MIN(leftBottomY, self.frame.size.width + self.frame.size.height - step));
-                CGContextStrokePath(context);
-            }
+            [self drawStripPatternWithType:MCDimmedTypeMiddle];
         }
+    }
+}
+
+static int extracted(MGCDimmedCollectionReusableView *object) {
+    int rightTopX = object.frame.size.width;
+    return rightTopX;
+}
+
+- (void)drawStripPatternWithType:(MCDimmedCollectionViewType)type {
+    int leftY = self.frame.size.height + (type == MCDimmedTypeTop ? - 16 : 0); // left
+    
+    int numberOfLines = leftY + self.frame.size.width / (self.patternWidth + self.patternOffset);
+    int leftX = 0; // left bottom
+    
+    int rightY = 0 + (type == MCDimmedTypeBottom ? 16 : 0); //;
+    int rightX = extracted(self);
+    
+    for (int j = 1; j <= numberOfLines; ++j) {
+        int step = j * (self.patternWidth + self.patternOffset);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSetStrokeColorWithColor(context, self.strokeColor.CGColor);
+        CGContextSetLineWidth(context, self.patternWidth);
+        CGContextMoveToPoint(context, MAX(step - leftY + (type == MCDimmedTypeBottom ? 16 : 0), leftX), MAX(leftY - step, rightY));
+        CGContextAddLineToPoint(context, MIN(leftX + step, rightX), MIN(leftY, self.frame.size.width + leftY - step));
+        CGContextStrokePath(context);
     }
 }
 
