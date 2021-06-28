@@ -26,23 +26,22 @@
         CGContextSetStrokeColorWithColor(context, self.strokeColor.CGColor);
         CGContextSetLineWidth(context, self.patternWidth);
 
-        if (self.viewType == MCDimmedTypeBottom || self.viewType == MCDimmedTypeTop) {
-            NSAttributedString *attrSTr = [self attributedStringForDateTime: self.viewType == MCDimmedTypeTop ? self.timeRange.end : self.timeRange.start];
+        if (self.viewType == MCDimmedTypeBottomBlueBorders || self.viewType == MCDimmedTypeTopBlueBorders) {
+            NSAttributedString *attrSTr = [self attributedStringForDateTime: self.viewType == MCDimmedTypeTopBlueBorders ? self.timeRange.end : self.timeRange.start];
             
             CGRect r = CGRectZero;
-            if (self.viewType == MCDimmedTypeTop) {
+            if (self.viewType == MCDimmedTypeTopBlueBorders) {
                 r = CGRectMake(9, self.frame.size.height - 16, self.frame.size.width - 10, 15);
-            } else if (self.viewType == MCDimmedTypeBottom) {
+            } else if (self.viewType == MCDimmedTypeBottomBlueBorders) {
                 r = CGRectMake(9, 1, self.frame.size.width - 10, 15);
             }
-            [self drawStripPatternWithType:self.viewType];
             
+            [self drawStripPatternWithType:self.viewType];
             UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:r cornerRadius:5];
             [path setLineWidth:1];
             CGContextSetFillColorWithColor(context, self.scheduleBorderColor.CGColor);
             CGContextSetStrokeColorWithColor(context, self.scheduleBorderColor.CGColor);
             [path stroke];
-            //[path fill];
             
             UIBezierPath *trianglePath = [UIBezierPath new];
             [trianglePath moveToPoint:(CGPoint){9, r.origin.y + 4}]; //right top
@@ -52,6 +51,8 @@
             [trianglePath fill];
             r.origin.y = r.origin.y + 1.5;
             [attrSTr drawInRect:r];
+        } else if (self.viewType == MCDimmedTypeBottom || self.viewType == MCDimmedTypeTop) {
+            [self drawStripPatternWithType:self.viewType];
         } else if (self.viewType == MCDimmedTypeMiddle) {
             [self drawStripPatternWithType:MCDimmedTypeMiddle];
         }
@@ -64,12 +65,23 @@ static int extracted(MGCDimmedCollectionReusableView *object) {
 }
 
 - (void)drawStripPatternWithType:(MCDimmedCollectionViewType)type {
-    int leftY = self.frame.size.height + (type == MCDimmedTypeTop ? - 16 : 0); // left
+    int leftY = self.frame.size.height;
+    if (type == MCDimmedTypeTopBlueBorders) {
+        leftY -= 16;
+    } else if (type == MCDimmedTypeTop) {
+        leftY -= 10;
+    }
+    
+    int bottomOffset = 0;
+    if (type == MCDimmedTypeBottomBlueBorders) {
+        bottomOffset = 16;
+    } else if (type == MCDimmedTypeBottom) {
+        bottomOffset = 10;
+    }
     
     int numberOfLines = leftY + self.frame.size.width / (self.patternWidth + self.patternOffset);
-    int leftX = 0; // left bottom
-    
-    int rightY = 0 + (type == MCDimmedTypeBottom ? 16 : 0); //;
+    int leftX = 0;
+    int rightY = 0 + bottomOffset;
     int rightX = extracted(self);
     
     for (int j = 1; j <= numberOfLines; ++j) {
@@ -77,7 +89,7 @@ static int extracted(MGCDimmedCollectionReusableView *object) {
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGContextSetStrokeColorWithColor(context, self.strokeColor.CGColor);
         CGContextSetLineWidth(context, self.patternWidth);
-        CGContextMoveToPoint(context, MAX(step - leftY + (type == MCDimmedTypeBottom ? 16 : 0), leftX), MAX(leftY - step, rightY));
+        CGContextMoveToPoint(context, MAX(step - leftY + bottomOffset, leftX), MAX(leftY - step, rightY));
         CGContextAddLineToPoint(context, MIN(leftX + step, rightX), MIN(leftY, self.frame.size.width + leftY - step));
         CGContextStrokePath(context);
     }

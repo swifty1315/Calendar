@@ -11,8 +11,10 @@
 
 typedef enum: NSUInteger {
     MCDimmedTypeTop,
+    MCDimmedTypeTopBlueBorders,
     MCDimmedTypeMiddle,
     MCDimmedTypeBottom,
+    MCDimmedTypeBottomBlueBorders,
     MCDimmedTypeNone = 100
 } MCDimmedCollectionViewType;
 

@@ -2019,9 +2019,17 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         
         if (dimmedRangesCount > 1) {
             if (indexPath.row == 0) {
-                type = self.viewType == MGCWeekViewType ? MCDimmedTypeTop : MCDimmedTypeNone;
+                switch (self.viewType) {
+                    case MGCWeekViewType: type = MCDimmedTypeTopBlueBorders; break;
+                    case MGCDayViewType: type = MCDimmedTypeTop; break;
+                    default: type = MCDimmedTypeNone; break;
+                }
             } else if (indexPath.row == dimmedRangesCount - 1){
-                type = self.viewType == MGCWeekViewType ? MCDimmedTypeBottom : MCDimmedTypeNone;
+                switch (self.viewType) {
+                    case MGCWeekViewType: type = MCDimmedTypeBottomBlueBorders; break;
+                    case MGCDayViewType: type = MCDimmedTypeBottom; break;
+                    default: type = MCDimmedTypeNone; break;
+                }
             } else {
                 type = MCDimmedTypeMiddle;
             }
