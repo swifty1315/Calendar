@@ -66,6 +66,7 @@
 	if ([layoutAttributes isKindOfClass:MGCEventCellLayoutAttributes.class]) {
 		MGCEventCellLayoutAttributes *attribs = (MGCEventCellLayoutAttributes*)layoutAttributes;
 		self.visibleHeight = attribs.visibleHeight;
+        self.layer.zPosition = 100;
 	}
 }
 
