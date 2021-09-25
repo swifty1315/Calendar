@@ -2017,7 +2017,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         }
         view.timeRange = [ranges objectAtIndex:indexPath.row];
         
-        if (dimmedRangesCount > 1) {
+        if (dimmedRangesCount > 0) {
             if (indexPath.row == 0) {
                 switch (self.viewType) {
                     case MGCWeekViewType: type = MCDimmedTypeTopBlueBorders; break;
