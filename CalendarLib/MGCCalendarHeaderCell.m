@@ -21,7 +21,7 @@
 - (instancetype)initWithCoder:(NSCoder*)aDecoder
 {
     self = [super initWithCoder:aDecoder];
-    if (self) {        
+    if (self) {
         //self.selectedDayBackgroundColor = [UIColor whiteColor];
         self.selectedDayTextColor = [UIColor darkGrayColor];
         self.dayTextColor = [UIColor blackColor];
@@ -66,18 +66,25 @@
 {
     [super layoutSubviews];
     
+    self.dayNameLabel.font = self.dayNameLabelFont;
+    
     if (self.isSelected) {
+        
         self.highlightView.backgroundColor = self.selectedDayBackgroundColor;
         self.dayNumberLabel.layer.masksToBounds = YES;
         self.dayNumberLabel.layer.cornerRadius = 15.0;
         self.dayNumberLabel.textColor = self.selectedDayTextColor;
         self.dayNameLabel.textColor = self.selectedDayTextColor;
+        self.dayNumberLabel.font = self.dayNumberLabelFontSelected;
+        
     } else {
+        
         self.highlightView.backgroundColor = self.dayBackgroundColor;
         self.dayNumberLabel.backgroundColor = [UIColor clearColor];
         self.dayNumberLabel.backgroundColor = [UIColor clearColor];
         self.dayNumberLabel.textColor = self.dayTextColor;
         self.dayNameLabel.textColor = self.dayTextColor;
+        self.dayNumberLabel.font = self.dayNumberLabelFontSelected;
     }
     
     if (self.isWeekend && !self.isToday) {

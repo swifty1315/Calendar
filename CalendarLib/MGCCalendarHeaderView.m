@@ -247,6 +247,9 @@ static CGFloat kDetailsLabelHeight = 0;
     cell.weekendColor = self.weekendColor;
     cell.todayColor = self.accentColor;
     cell.dayBackgroundColor = self.headerBackgroundColor;
+    cell.dayNameLabelFont = self.dayNameFont;
+    cell.dayNumberLabelFont = self.dayNumberFont;
+    cell.dayNumberLabelFontSelected = self.dayNumberFontSelected;
     [cell layoutSubviews];
     return cell;
 }

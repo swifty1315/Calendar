@@ -23,4 +23,9 @@
 @property (nonatomic, strong) UIColor *pastDateColor;
 @property (nonatomic, strong) UIColor *weekendColor;
 
+// fonts
+@property (nonatomic, strong) UIFont *dayNameLabelFont;
+@property (nonatomic, strong) UIFont *dayNumberLabelFont;
+@property (nonatomic, strong) UIFont *dayNumberLabelFontSelected;
+
 @end

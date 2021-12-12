@@ -52,6 +52,24 @@
 @property (nonatomic, strong) UIColor *dateTextColor;
 
 /*!
+ @abstract    Week day font
+ */
+
+@property (nonatomic, strong) UIFont *dayNameFont;
+
+/*!
+ @abstract    Day number font
+ */
+
+@property (nonatomic, strong) UIFont *dayNumberFont;
+
+/*!
+ @abstract    Day number font selected
+ */
+
+@property (nonatomic, strong) UIFont *dayNumberFontSelected;
+
+/*!
  
  @abstract    The header background color
  @discussion Light gray by default
